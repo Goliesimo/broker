@@ -1,0 +1,21 @@
+/* app/styles/admin-transactions.css */
+
+.txn-summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+.txn-summary-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 22px; }
+.txn-summary-label { font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; }
+.txn-summary-value { font-family:var(--font-display); font-size:26px; font-weight:800; margin-bottom:4px; }
+.txn-summary-sub   { font-size:12px; color:var(--text-dim); }
+
+.txn-filters { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+.txn-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+
+.txn-type-badge      { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; text-transform:capitalize; padding:4px 10px; border-radius:99px; }
+.txn-type-deposit    { background:rgba(0,212,170,0.1);  color:var(--teal); }
+.txn-type-withdrawal { background:rgba(255,77,106,0.1); color:var(--red);  }
+.txn-type-profit     { background:rgba(255,184,0,0.1);  color:var(--gold); }
+
+.txn-actions { display:flex; gap:6px; }
+.approve-btn { background:rgba(0,212,170,0.1); color:var(--teal); border:1px solid rgba(0,212,170,0.25); border-radius:6px; padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; transition:var(--transition); }
+.approve-btn:hover { background:rgba(0,212,170,0.2); }
+.reject-btn  { background:rgba(255,77,106,0.1); color:var(--red); border:1px solid rgba(255,77,106,0.25); border-radius:6px; padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; transition:var(--transition); }
+.reject-btn:hover { background:rgba(255,77,106,0.2); }

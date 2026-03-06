@@ -1,0 +1,38 @@
+/* app/styles/register.css */
+
+.register-page { min-height:100vh; display:grid; grid-template-columns:1fr 1.3fr; }
+
+.register-left { background:var(--surface); border-right:1px solid var(--border); padding:48px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; }
+.register-left-bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 100% 60% at -10% 30%,rgba(0,212,170,0.1),transparent 60%),radial-gradient(ellipse 60% 50% at 110% 70%,rgba(123,97,255,0.08),transparent 60%); }
+.register-logo { display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:20px; font-weight:800; position:relative; z-index:1; }
+.register-logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--teal),var(--blue)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.register-plan-preview { position:relative; z-index:1; margin-top:auto; margin-bottom:auto; }
+.register-plan-title { font-size:13px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+.register-plan-cards { display:flex; flex-direction:column; gap:10px; }
+.register-plan-item { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:var(--transition); }
+.register-plan-item:hover { border-color:var(--border-2); }
+.register-plan-item.selected { border-color:var(--teal); background:rgba(0,212,170,0.05); }
+.register-plan-item-name  { font-size:14px; font-weight:600; }
+.register-plan-item-price { font-size:13px; color:var(--text-dim); }
+.register-plan-item-roi   { font-size:14px; font-weight:700; }
+
+.register-right { padding:48px 64px; display:flex; flex-direction:column; justify-content:center; }
+.register-right-title { font-size:32px; font-weight:800; margin-bottom:8px; }
+.register-right-sub   { font-size:15px; color:var(--text-dim); margin-bottom:36px; }
+.register-form        { display:flex; flex-direction:column; gap:18px; }
+.register-form-row    { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+.plan-selector-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:4px; }
+.plan-selector-item { border:1px solid var(--border); border-radius:var(--radius); padding:12px 6px; text-align:center; cursor:pointer; transition:var(--transition); background:var(--surface-2); }
+.plan-selector-item:hover { border-color:var(--border-2); }
+.plan-selector-item.active { border-color:var(--teal); background:rgba(0,212,170,0.08); }
+.plan-selector-name  { font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; }
+.plan-selector-roi   { font-size:15px; font-weight:800; margin-top:4px; }
+.plan-selector-price { font-size:10px; color:var(--text-muted); margin-top:2px; }
+
+.terms-check { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text-dim); cursor:pointer; }
+.terms-check input { accent-color:var(--teal); margin-top:2px; flex-shrink:0; }
+.terms-check a { color:var(--teal); }
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(0,0,0,0.3); border-top-color:#050B18; border-radius:50%; }
+
+@media (max-width:900px) { .register-page{grid-template-columns:1fr} .register-left{display:none} .register-right{padding:32px 24px} .plan-selector-grid{grid-template-columns:repeat(3,1fr)} }
