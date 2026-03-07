@@ -25,7 +25,7 @@ function getSession() {
   } catch { return null; }
 }
 
-function CheckoutInner() {
+function CheckoutContent() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const planId       = searchParams.get("plan") || "pro";
@@ -360,7 +360,7 @@ function CheckoutContent() {
   );
 }
 
-function CheckoutInner() {
+function CheckoutContent() {
   return (
     <Suspense fallback={<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}>
       <div style={{width:40,height:40,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} />
@@ -377,7 +377,7 @@ export default function CheckoutPage() {
         <div style={{width:40,height:40,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} />
       </div>
     }>
-      <CheckoutInner />
+      <CheckoutContent />
     </Suspense>
   );
 }
