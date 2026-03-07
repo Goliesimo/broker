@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PLANS } from "../../lib/data";
@@ -25,7 +25,7 @@ function getSession() {
   } catch { return null; }
 }
 
-export default function CheckoutPage() {
+function CheckoutInner() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const planId       = searchParams.get("plan") || "pro";
@@ -349,5 +349,35 @@ export default function CheckoutPage() {
         </div>
       </div>
     </>
+  );
+}
+
+function CheckoutContent() {
+  return (
+    <Suspense fallback={<div style={{minHeight:"100vh",background:"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:36,height:36,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} /></div>}>
+      <CheckoutInner />
+    </Suspense>
+  );
+}
+
+function CheckoutInner() {
+  return (
+    <Suspense fallback={<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}>
+      <div style={{width:40,height:40,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} />
+    </div>}>
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}>
+        <div style={{width:40,height:40,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} />
+      </div>
+    }>
+      <CheckoutInner />
+    </Suspense>
   );
 }
