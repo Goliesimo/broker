@@ -352,24 +352,6 @@ function CheckoutContent() {
   );
 }
 
-function CheckoutContent() {
-  return (
-    <Suspense fallback={<div style={{minHeight:"100vh",background:"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:36,height:36,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} /></div>}>
-      <CheckoutInner />
-    </Suspense>
-  );
-}
-
-function CheckoutContent() {
-  return (
-    <Suspense fallback={<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}>
-      <div style={{width:40,height:40,border:"3px solid var(--surface-3)",borderTopColor:"var(--teal)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}} />
-    </div>}>
-      <CheckoutContent />
-    </Suspense>
-  );
-}
-
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
