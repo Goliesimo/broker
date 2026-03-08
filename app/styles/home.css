@@ -69,10 +69,18 @@
 .footer-links a:hover { color:var(--teal); }
 .footer-copy { font-size:13px; color:var(--text-muted); }
 
+
+.navbar-hamburger { display:none; flex-direction:column; background:none; border:none; cursor:pointer; padding:4px; }
+.navbar-desktop-actions { display:flex; gap:12px; }
+
+@keyframes fadeDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
 /* ── Mobile Responsive ── */
 @media (max-width: 768px) {
   .navbar { padding:0 20px; height:60px; }
   .navbar-links { display:none; }
+  .navbar-hamburger { display:flex; }
+  .navbar-desktop-actions { display:none; }
 
   .hero { padding:100px 20px 60px; }
   .hero-title { font-size:36px; }
