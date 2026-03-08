@@ -32,6 +32,7 @@ export default function PlansPage() {
     <div className="plans-page">
       <Navbar />
 
+      {/* Header */}
       <div className="plans-header">
         <div className="section-label fade-in">Investment Plans</div>
         <h1 className="fade-up">Choose Your <span className="gradient-text">Growth Plan</span></h1>
@@ -44,8 +45,9 @@ export default function PlansPage() {
         </div>
       </div>
 
+      {/* Plans Grid */}
       <div className="plans-grid">
-        {PLANS.map((plan,i)=>(
+        {PLANS.map((plan,i) => (
           <div key={plan.id} className={`plan-card fade-up${plan.badge==="Most Popular"?" featured":""}`} style={{animationDelay:`${i*0.08}s`}}>
             <div className="plan-card-glow" style={{background:plan.color}} />
             {plan.badge==="Most Popular" && <div className="plan-featured-badge">{plan.badge}</div>}
@@ -54,49 +56,53 @@ export default function PlansPage() {
             <div className="plan-roi" style={{color:plan.color}}>{plan.roi}<span className="plan-roi-suffix">%</span></div>
             <div className="plan-roi-label">Monthly Return</div>
             <div className="plan-price" style={{color:plan.color}}>
-              ${billing==="annual"?Math.floor(plan.price*11).toLocaleString():plan.price.toLocaleString()}
+              ${billing==="annual" ? Math.floor(plan.price*11).toLocaleString() : plan.price.toLocaleString()}
               <span className="plan-price-sub"> / {billing==="annual"?"year":"month"}</span>
             </div>
             <div className="plan-features">
-              {plan.features.map((f,fi)=>(
+              {plan.features.map((f,fi) => (
                 <div key={fi} className="plan-feature included"><span className="plan-feature-check">✓</span>{f}</div>
               ))}
-              {plan.notIncluded.map((f,fi)=>(
+              {plan.notIncluded.map((f,fi) => (
                 <div key={fi} className="plan-feature not-included"><span className="plan-feature-x">✗</span>{f}</div>
               ))}
             </div>
-            <Link href={`/checkout?plan=${plan.id}`} className={`btn plan-cta ${plan.badge==="Most Popular"?"btn-primary":"btn-outline"}`}>Get Started →</Link>
+            <Link href={`/checkout?plan=${plan.id}`} className={`btn plan-cta ${plan.badge==="Most Popular"?"btn-primary":"btn-outline"}`}>
+              Get Started →
+            </Link>
           </div>
         ))}
       </div>
 
+      {/* Comparison Table */}
       <div className="comparison-section">
         <h2>Full <span className="gradient-text">Comparison</span></h2>
         <div className="comparison-table-wrap">
-        <table className="comparison-table">
-          <thead>
-            <tr>
-              <th style={{textAlign:"left"}}>Feature</th>
-              {PLANS.map(p=><th key={p.id} style={{color:p.color}}>{p.name}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {COMPARISON.map((row,i)=>(
-              <tr key={i}>
-                <td>{row.feature}</td>
-                {row.values.map((v,vi)=>(
-                  <td key={vi} style={{color:v==="✓"?"var(--teal)":v==="✗"?"var(--text-muted)":"var(--text)"}}>{v}</td>
-                ))}
+          <table className="comparison-table">
+            <thead>
+              <tr>
+                <th style={{textAlign:"left"}}>Feature</th>
+                {PLANS.map(p => <th key={p.id} style={{color:p.color}}>{p.name}</th>)}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {COMPARISON.map((row,i) => (
+                <tr key={i}>
+                  <td>{row.feature}</td>
+                  {row.values.map((v,vi) => (
+                    <td key={vi} style={{color:v==="✓"?"var(--teal)":v==="✗"?"var(--text-muted)":"var(--text)"}}>{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
+      {/* FAQ */}
       <div className="faq-section">
         <h2>Frequently Asked <span className="gradient-text">Questions</span></h2>
-        {FAQ.map((item,i)=>(
+        {FAQ.map((item,i) => (
           <div key={i} className="faq-item">
             <div className="faq-q" onClick={()=>setOpenFaq(openFaq===i?null:i)}>
               <span>{item.q}</span>
@@ -106,7 +112,7 @@ export default function PlansPage() {
           </div>
         ))}
       </div>
+
     </div>
-  </div>
   );
 }
