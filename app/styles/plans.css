@@ -47,5 +47,44 @@
 .faq-q:hover { background:var(--surface-2); }
 .faq-a { padding:0 20px 18px; font-size:14px; color:var(--text-dim); line-height:1.7; }
 
-@media (max-width:1100px) { .plans-grid{grid-template-columns:repeat(3,1fr)} }
-@media (max-width:768px)  { .plans-grid{grid-template-columns:1fr} }
+/* ── Mobile Responsive ── */
+@media (max-width: 1100px) {
+  .plans-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .plans-header { padding: 90px 20px 40px; }
+  .plans-header h1 { font-size: 32px; }
+  .plans-header p  { font-size: 15px; }
+
+  .billing-toggle { flex-wrap: wrap; justify-content: center; }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px 60px;
+    gap: 16px;
+  }
+
+  .plan-card { padding: 24px 20px; }
+  .plan-roi  { font-size: 40px; }
+
+  /* Comparison table — scrollable on mobile */
+  .comparison-section { padding: 0 16px 60px; overflow-x: auto; }
+  .comparison-section h2 { font-size: 24px; margin-bottom: 24px; }
+  .comparison-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .comparison-table { min-width: 600px; }
+  .comparison-table th { font-size: 11px; padding: 12px 8px; }
+  .comparison-table td { font-size: 12px; padding: 10px 8px; }
+
+  /* FAQ section */
+  .faq-section { padding: 0 16px 60px; }
+  .faq-section h2 { font-size: 24px; }
+  .faq-q { font-size: 14px; padding: 14px 16px; }
+  .faq-a { font-size: 13px; padding: 0 16px 14px; }
+}
+
+@media (max-width: 480px) {
+  .plans-grid { grid-template-columns: 1fr; }
+  .plans-header h1 { font-size: 26px; }
+  .plan-roi { font-size: 36px; }
+}

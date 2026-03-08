@@ -72,7 +72,7 @@ export default function PlansPage() {
 
       <div className="comparison-section">
         <h2>Full <span className="gradient-text">Comparison</span></h2>
-        <table className="comparison-table">
+        <div className="comparison-table-wrap"><table className="comparison-table">
           <thead>
             <tr>
               <th style={{textAlign:"left"}}>Feature</th>
