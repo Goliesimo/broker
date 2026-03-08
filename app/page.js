@@ -26,6 +26,18 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Fixed Ticker Bar */}
+      <div className="ticker-fixed">
+        <div className="ticker-track">
+          {tickers.map((c,i)=>(
+            <div key={i} className="ticker-item">
+              <span className="ticker-symbol">{c.symbol}/USDT</span>
+              <span className="ticker-price">${c.price.toLocaleString()}</span>
+              <span className={c.change>=0?"ticker-pos":"ticker-neg"}>{c.change>=0?"+":""}{Math.abs(c.change)}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
       <Navbar />
 
       {/* Hero */}
@@ -58,18 +70,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Ticker */}
-      <div className="ticker-wrap">
-        <div className="ticker-track">
-          {tickers.map((c,i)=>(
-            <div key={i} className="ticker-item">
-              <span className="ticker-symbol">{c.symbol}/USDT</span>
-              <span className="ticker-price">${c.price.toLocaleString()}</span>
-              <span className={c.change>=0?"ticker-pos":"ticker-neg"}>{c.change>=0?"up":"down"} {Math.abs(c.change)}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Features */}
       <section className="features" id="features">
