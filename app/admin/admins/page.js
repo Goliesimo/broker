@@ -3,13 +3,150 @@ import { useState, useEffect, useRef } from "react";
 import { AdminLayout } from "../page";
 import "../../styles/admin-users.css";
 
-const DEFAULT_AVATAR = "https://ui-avatars.com/api/?background=0D1117&color=00D4AA&bold=true&size=128";
+const initials = (name) => name ? name.split(" ").map(n=>n[0]).join("").toUpperCase().slice(0,2) : "A";
 
+// ── Modal defined OUTSIDE so it never remounts on keystroke ──
+function AdminModal({ modal, selected, form, setForm, onAdd, onEdit, onDelete, onClose, saving, showPw, setShowPw, fileRef, handleAvatarUpload }) {
+  if (!modal) return null;
+
+  if (modal === "delete") return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="user-modal" style={{maxWidth:420}} onClick={e=>e.stopPropagation()}>
+        <div className="user-modal-body" style={{textAlign:"center",padding:"32px 24px"}}>
+          <div style={{fontSize:48,marginBottom:16}}>⚠️</div>
+          <div style={{fontSize:18,fontWeight:700,marginBottom:8}}>Remove Admin?</div>
+          <div style={{color:"var(--text-dim)",fontSize:14,marginBottom:24}}>
+            Are you sure you want to remove <strong style={{color:"var(--text)"}}>{selected?.name}</strong> as an administrator? This cannot be undone.
+          </div>
+          <div style={{display:"flex",gap:10}}>
+            <button className="btn btn-ghost" style={{flex:1}} onClick={onClose}>Cancel</button>
+            <button className="btn btn-danger" style={{flex:1}} onClick={onDelete} disabled={saving}>
+              {saving ? "Removing…" : "🗑 Remove Admin"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const isEdit = modal === "edit";
+  const onSubmit = isEdit ? onEdit : onAdd;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="user-modal" style={{maxWidth:500}} onClick={e=>e.stopPropagation()}>
+        <div className="user-modal-head">
+          <div>
+            <div style={{fontSize:20,fontWeight:700,color:"var(--text)"}}>{isEdit ? "✏️ Edit Admin" : "➕ Add New Admin"}</div>
+            <div style={{fontSize:13,color:"var(--text-dim)",marginTop:4}}>
+              {isEdit ? "Update admin account details" : "Create a new admin with full privileges"}
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"none",border:"none",color:"var(--text-dim)",fontSize:20,cursor:"pointer"}}>✕</button>
+        </div>
+        <div className="user-modal-body">
+          <form onSubmit={onSubmit} style={{display:"flex",flexDirection:"column",gap:16}}>
+
+            {/* Avatar */}
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,marginBottom:8}}>
+              <div style={{width:88,height:88,borderRadius:"50%",overflow:"hidden",border:"2px solid var(--teal)",background:"var(--surface-2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--teal)"}}>
+                {form.avatar
+                  ? <img src={form.avatar} alt="avatar" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                  : <span>{form.name ? initials(form.name) : "👤"}</span>
+                }
+              </div>
+              <button type="button" className="btn btn-outline btn-sm" onClick={()=>fileRef.current.click()}>
+                📷 {form.avatar ? "Change Photo" : "Upload Photo"}
+              </button>
+              {form.avatar && (
+                <button type="button" style={{background:"none",border:"none",color:"var(--red)",fontSize:12,cursor:"pointer"}} onClick={()=>setForm(f=>({...f,avatar:""}))}>
+                  Remove photo
+                </button>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handleAvatarUpload} />
+            </div>
+
+            {/* Name */}
+            <div className="form-group">
+              <label className="input-label">Full Name</label>
+              <input
+                className="input"
+                placeholder="e.g. John Smith"
+                value={form.name}
+                onChange={e=>setForm(f=>({...f,name:e.target.value}))}
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div className="form-group">
+              <label className="input-label">Email Address</label>
+              <input
+                className="input"
+                type="email"
+                placeholder="admin@example.com"
+                value={form.email}
+                onChange={e=>setForm(f=>({...f,email:e.target.value}))}
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div className="form-group">
+              <label className="input-label">{isEdit ? "New Password (leave blank to keep current)" : "Password"}</label>
+              <div style={{position:"relative"}}>
+                <input
+                  className="input"
+                  type={showPw?"text":"password"}
+                  placeholder={isEdit?"Leave blank to keep current":"Min 6 characters"}
+                  value={form.password}
+                  onChange={e=>setForm(f=>({...f,password:e.target.value}))}
+                  required={!isEdit}
+                  style={{paddingRight:70}}
+                />
+                <button type="button" onClick={()=>setShowPw(p=>!p)} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--text-dim)",cursor:"pointer",fontSize:12}}>
+                  {showPw?"Hide":"Show"}
+                </button>
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="form-group">
+              <label className="input-label">Confirm Password</label>
+              <input
+                className="input"
+                type={showPw?"text":"password"}
+                placeholder="Repeat password"
+                value={form.confirmPassword}
+                onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))}
+                required={!isEdit || !!form.password}
+              />
+            </div>
+
+            {/* Privileges note */}
+            <div style={{background:"rgba(0,212,170,0.05)",border:"1px solid rgba(0,212,170,0.2)",borderRadius:"var(--radius)",padding:12,fontSize:13,color:"var(--text-dim)"}}>
+              🛡️ This account will have <strong style={{color:"var(--teal)"}}>full admin privileges</strong> — user management, balance control, subscription approval, and plan management.
+            </div>
+
+            <div style={{display:"flex",gap:10,marginTop:4}}>
+              <button type="button" className="btn btn-ghost" style={{flex:1}} onClick={onClose}>Cancel</button>
+              <button type="submit" className="btn btn-primary" style={{flex:2}} disabled={saving}>
+                {saving ? "Saving…" : isEdit ? "💾 Save Changes" : "➕ Create Admin"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────────
 export default function AdminsPage() {
   const [admins,   setAdmins]   = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [toast,    setToast]    = useState("");
-  const [modal,    setModal]    = useState(null); // "add" | "edit" | "delete"
+  const [modal,    setModal]    = useState(null);
   const [selected, setSelected] = useState(null);
   const [form,     setForm]     = useState({ name:"", email:"", password:"", confirmPassword:"", avatar:"" });
   const [saving,   setSaving]   = useState(false);
@@ -18,9 +155,7 @@ export default function AdminsPage() {
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(""), 3500); };
 
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
+  useEffect(() => { fetchAdmins(); }, []);
 
   const fetchAdmins = async () => {
     setLoading(true);
@@ -28,19 +163,21 @@ export default function AdminsPage() {
       const res = await fetch("/api/users");
       const data = await res.json();
       setAdmins((data.users || []).filter(u => u.role === "admin"));
-    } catch { }
+    } catch {}
     setLoading(false);
   };
 
   const openAdd = () => {
     setForm({ name:"", email:"", password:"", confirmPassword:"", avatar:"" });
     setSelected(null);
+    setShowPw(false);
     setModal("add");
   };
 
   const openEdit = (admin) => {
     setSelected(admin);
     setForm({ name:admin.name, email:admin.email, password:"", confirmPassword:"", avatar:admin.avatar||"" });
+    setShowPw(false);
     setModal("edit");
   };
 
@@ -64,23 +201,14 @@ export default function AdminsPage() {
       const res = await fetch("/api/auth/register", {
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          name:     form.name,
-          email:    form.email,
-          password: form.password,
-          role:     "admin",
-          avatar:   form.avatar,
-          plan:     "titan",
-          balance:  0, invested:0, profit:0,
-        }),
+        body: JSON.stringify({ name:form.name, email:form.email, password:form.password, role:"admin", avatar:form.avatar, plan:"titan", balance:0, invested:0, profit:0 }),
       });
       const data = await res.json();
       if (!res.ok) { showToast("❌ " + (data.error || "Failed to create admin")); setSaving(false); return; }
-      // Set role to admin explicitly
       await fetch("/api/users", {
         method:"PATCH",
         headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ userId: data.user.id, role:"admin", avatar: form.avatar }),
+        body: JSON.stringify({ userId:data.user.id, role:"admin", avatar:form.avatar }),
       });
       showToast("✅ Admin account created successfully!");
       setModal(null);
@@ -100,16 +228,10 @@ export default function AdminsPage() {
       const res = await fetch("/api/users", {
         method:"PATCH",
         headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ userId: selected.id, ...updates }),
+        body: JSON.stringify({ userId:selected.id, ...updates }),
       });
-      if (res.ok) {
-        showToast("✅ Admin updated successfully!");
-        setModal(null);
-        fetchAdmins();
-      } else {
-        const data = await res.json();
-        showToast("❌ " + (data.error || "Update failed"));
-      }
+      if (res.ok) { showToast("✅ Admin updated successfully!"); setModal(null); fetchAdmins(); }
+      else { const d = await res.json(); showToast("❌ " + (d.error || "Update failed")); }
     } catch { showToast("❌ Network error"); }
     setSaving(false);
   };
@@ -124,88 +246,6 @@ export default function AdminsPage() {
     } catch { showToast("❌ Network error"); }
     setSaving(false);
   };
-
-  const initials = (name) => name ? name.split(" ").map(n=>n[0]).join("").toUpperCase().slice(0,2) : "A";
-
-  const ModalForm = ({ onSubmit, title, isEdit }) => (
-    <div className="modal-overlay" onClick={() => setModal(null)}>
-      <div className="user-modal" style={{maxWidth:500}} onClick={e=>e.stopPropagation()}>
-        <div className="user-modal-head">
-          <div>
-            <div style={{fontSize:20,fontWeight:700,color:"var(--text)"}}>{title}</div>
-            <div style={{fontSize:13,color:"var(--text-dim)",marginTop:4}}>
-              {isEdit ? "Update admin account details" : "Create a new admin with full privileges"}
-            </div>
-          </div>
-          <button onClick={()=>setModal(null)} style={{background:"none",border:"none",color:"var(--text-dim)",fontSize:20,cursor:"pointer"}}>✕</button>
-        </div>
-        <div className="user-modal-body">
-          <form onSubmit={onSubmit} style={{display:"flex",flexDirection:"column",gap:16}}>
-
-            {/* Avatar upload */}
-            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,marginBottom:8}}>
-              <div style={{width:88,height:88,borderRadius:"50%",overflow:"hidden",border:"2px solid var(--teal)",background:"var(--surface-2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"var(--teal)"}}>
-                {form.avatar
-                  ? <img src={form.avatar} alt="avatar" style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                  : <span>{form.name ? initials(form.name) : "👤"}</span>
-                }
-              </div>
-              <button type="button" className="btn btn-outline btn-sm" onClick={()=>fileRef.current.click()}>
-                📷 {form.avatar ? "Change Photo" : "Upload Photo"}
-              </button>
-              {form.avatar && (
-                <button type="button" style={{background:"none",border:"none",color:"var(--red)",fontSize:12,cursor:"pointer"}} onClick={()=>setForm(f=>({...f,avatar:""}))}>
-                  Remove photo
-                </button>
-              )}
-              <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handleAvatarUpload} />
-            </div>
-
-            {/* Name */}
-            <div className="form-group">
-              <label className="input-label">Full Name</label>
-              <input className="input" placeholder="e.g. John Smith" value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} required />
-            </div>
-
-            {/* Email */}
-            <div className="form-group">
-              <label className="input-label">Email Address</label>
-              <input className="input" type="email" placeholder="admin@example.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} required />
-            </div>
-
-            {/* Password */}
-            <div className="form-group">
-              <label className="input-label">{isEdit ? "New Password (leave blank to keep current)" : "Password"}</label>
-              <div style={{position:"relative"}}>
-                <input className="input" type={showPw?"text":"password"} placeholder={isEdit?"Leave blank to keep current":"Min 6 characters"} value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))} required={!isEdit} style={{paddingRight:70}} />
-                <button type="button" onClick={()=>setShowPw(!showPw)} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--text-dim)",cursor:"pointer",fontSize:12}}>
-                  {showPw?"Hide":"Show"}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div className="form-group">
-              <label className="input-label">Confirm Password</label>
-              <input className="input" type={showPw?"text":"password"} placeholder="Repeat password" value={form.confirmPassword} onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))} required={!isEdit || !!form.password} />
-            </div>
-
-            {/* Privileges info */}
-            <div style={{background:"rgba(0,212,170,0.05)",border:"1px solid rgba(0,212,170,0.2)",borderRadius:"var(--radius)",padding:12,fontSize:13,color:"var(--text-dim)"}}>
-              🛡️ This account will have <strong style={{color:"var(--teal)"}}>full admin privileges</strong> — user management, balance control, subscription approval, and plan management.
-            </div>
-
-            <div style={{display:"flex",gap:10,marginTop:4}}>
-              <button type="button" className="btn btn-ghost" style={{flex:1}} onClick={()=>setModal(null)}>Cancel</button>
-              <button type="submit" className="btn btn-primary" style={{flex:2}} disabled={saving}>
-                {saving ? "Saving…" : isEdit ? "💾 Save Changes" : "➕ Create Admin"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <AdminLayout>
@@ -234,9 +274,7 @@ export default function AdminsPage() {
           </div>
         ) : (
           <table className="table">
-            <thead>
-              <tr>{["Admin","Email","Status","Joined","Actions"].map(h=><th key={h}>{h}</th>)}</tr>
-            </thead>
+            <thead><tr>{["Admin","Email","Status","Joined","Actions"].map(h=><th key={h}>{h}</th>)}</tr></thead>
             <tbody>
               {admins.map(admin => (
                 <tr key={admin.id}>
@@ -270,32 +308,21 @@ export default function AdminsPage() {
         )}
       </div>
 
-      {/* Add Modal */}
-      {modal === "add" && <ModalForm onSubmit={handleAdd} title="➕ Add New Admin" isEdit={false} />}
-
-      {/* Edit Modal */}
-      {modal === "edit" && <ModalForm onSubmit={handleEdit} title="✏️ Edit Admin" isEdit={true} />}
-
-      {/* Delete Confirm Modal */}
-      {modal === "delete" && selected && (
-        <div className="modal-overlay" onClick={()=>setModal(null)}>
-          <div className="user-modal" style={{maxWidth:420}} onClick={e=>e.stopPropagation()}>
-            <div className="user-modal-body" style={{textAlign:"center",padding:"32px 24px"}}>
-              <div style={{fontSize:48,marginBottom:16}}>⚠️</div>
-              <div style={{fontSize:18,fontWeight:700,marginBottom:8}}>Remove Admin?</div>
-              <div style={{color:"var(--text-dim)",fontSize:14,marginBottom:24}}>
-                Are you sure you want to remove <strong style={{color:"var(--text)"}}>{selected.name}</strong> as an administrator? This action cannot be undone.
-              </div>
-              <div style={{display:"flex",gap:10}}>
-                <button className="btn btn-ghost" style={{flex:1}} onClick={()=>setModal(null)}>Cancel</button>
-                <button className="btn btn-danger" style={{flex:1}} onClick={handleDelete} disabled={saving}>
-                  {saving ? "Removing…" : "🗑 Remove Admin"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AdminModal
+        modal={modal}
+        selected={selected}
+        form={form}
+        setForm={setForm}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onClose={()=>setModal(null)}
+        saving={saving}
+        showPw={showPw}
+        setShowPw={setShowPw}
+        fileRef={fileRef}
+        handleAvatarUpload={handleAvatarUpload}
+      />
 
       {toast && <div className="admin-toast">{toast}</div>}
     </AdminLayout>
