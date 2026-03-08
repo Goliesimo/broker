@@ -23,7 +23,7 @@ export default function RegisterPage() {
     if (!form.terms) { setError("You must accept the terms to continue."); return; }
     setLoading(true);
     try {
-      const res  = await fetch("/api/auth/register", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form) });
+      const res  = await fetch("/api/auth/register", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ ...form, name: `${form.firstName} ${form.lastName}`.trim() }) });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Registration failed."); setLoading(false); return; }
       router.push("/dashboard");
