@@ -28,7 +28,7 @@ function readSession() {
     const match = all.find(c => c.startsWith("cv_session="));
     if (!match) return null;
     const val = match.substring("cv_session=".length);
-    return JSON.parse(decodeURIComponent(decodeURIComponent(val)));
+    return JSON.parse(decodeURIComponent(val));
   } catch {
     return null;
   }
@@ -43,34 +43,35 @@ export default function DashboardPage() {
   const [modal,    setModal]    = useState(null);
   const [txForm,   setTxForm]   = useState({ amount:"", crypto:"USDT" });
   const [txDone,   setTxDone]   = useState(false);
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    // Small delay to ensure cookies are available after redirect
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       const session = readSession();
       if (session) {
-        setUser({
-          id:       session.id    || "u-demo",
-          name:     session.name  || "Investor",
-          email:    session.email || "user@demo.com",
-          role:     session.role  || "user",
-          plan:     session.plan  || "pro",
-          balance:  6200,
-          invested: 5000,
-          profit:   1200,
-        });
+        // Fetch real user data from MongoDB
+        try {
+          const res = await fetch(`/api/users?id=${session.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setUser(data.user);
+          } else {
+            setUser({ id:session.id, name:session.name, email:session.email, role:session.role, plan:session.plan, balance:0, invested:0, profit:0 });
+          }
+        } catch {
+          setUser({ id:session.id, name:session.name, email:session.email, role:session.role, plan:session.plan, balance:0, invested:0, profit:0 });
+        }
+        // Fetch real transactions
+        try {
+          const res = await fetch(`/api/transactions?userId=${session.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setTransactions(data.transactions || []);
+          }
+        } catch { setTransactions(MOCK_TXN); }
       } else {
-        // No session — use demo data so page still loads
-        setUser({
-          id:       "u-demo",
-          name:     "Demo User",
-          email:    "user@demo.com",
-          role:     "user",
-          plan:     "pro",
-          balance:  6200,
-          invested: 5000,
-          profit:   1200,
-        });
+        setUser({ id:"u-demo", name:"Demo User", email:"user@demo.com", role:"user", plan:"pro", balance:6200, invested:5000, profit:1200 });
+        setTransactions(MOCK_TXN);
       }
       setReady(true);
     }, 300);
@@ -109,7 +110,7 @@ export default function DashboardPage() {
       <aside className="sidebar">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">₿</div>
-          <span className="gradient-text">CryptoVault</span>
+          <span>CryptoVault <span className="gradient-text">Pro</span></span>
         </div>
         <div className="sidebar-section-label">Main Menu</div>
         {NAV.map(n => (
@@ -238,7 +239,7 @@ export default function DashboardPage() {
             <table className="table">
               <thead><tr>{["Type","Amount","Method","Status","Date"].map(h=><th key={h}>{h}</th>)}</tr></thead>
               <tbody>
-                {MOCK_TXN.map(tx => (
+                {(transactions.length > 0 ? transactions : MOCK_TXN).map(tx => (
                   <tr key={tx.id}>
                     <td><div style={{display:"flex",alignItems:"center",gap:8}}><span>{tx.type==="deposit"?"⬇":tx.type==="withdrawal"?"⬆":"💰"}</span><span style={{textTransform:"capitalize",fontWeight:500}}>{tx.type}</span></div></td>
                     <td style={{fontWeight:600,color:tx.type==="withdrawal"?"var(--red)":"var(--teal)"}}>{tx.type==="withdrawal"?"-":"+"}${tx.amount.toLocaleString()}</td>
