@@ -33,6 +33,7 @@ export function AdminLayout({ children }) {
     { href:"/admin/transactions",     icon:"🔄", label:"Transactions",  badge: ADMIN_STATS.pendingWithdrawals },
     { href:"/admin/subscriptions",    icon:"💳", label:"Subscriptions", badge: null },
     { href:"/admin/plans",            icon:"💎", label:"Manage Plans" },
+    { href:"/admin/admins",           icon:"🛡️",  label:"Admins" },
   ];
 
   return (
