@@ -59,9 +59,7 @@ export default function LoginPage() {
         <div className="auth-right-title">Log In to Your Account</div>
         <div className="auth-right-sub">Enter your credentials to access your dashboard.</div>
         <div className="demo-hint" style={{marginBottom:24}}>
-          <strong>Demo Credentials</strong>
-          User: user@demo.com · Admin: admin@demo.com · Password: password123
-        </div>
+         
         {error && <div className="auth-error" style={{marginBottom:16}}>⚠ {error}</div>}
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
