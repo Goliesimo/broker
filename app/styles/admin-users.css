@@ -34,3 +34,15 @@
 .user-info-label  { font-size:11px; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.8px; }
 .user-info-value  { font-size:15px; font-weight:600; }
 .user-modal-actions { display:flex; gap:10px; }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .users-table-card { overflow-x:auto; }
+  .table { min-width:600px; }
+  .actions-cell { flex-direction:column; gap:4px; }
+  .user-modal { width:95vw !important; max-width:95vw !important; }
+  .user-info-grid { grid-template-columns:1fr 1fr !important; }
+  .user-modal-head { flex-direction:column; gap:12px; }
+  .user-modal-actions { flex-wrap:wrap; }
+  .user-modal-actions .btn { flex:1; min-width:120px; }
+}

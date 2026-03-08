@@ -70,3 +70,10 @@
 .checkout-success-sub   { font-size:15px; color:var(--text-dim); max-width:400px; margin:0 auto 28px; line-height:1.7; }
 
 @media (max-width:900px) { .checkout-wrap{grid-template-columns:1fr} .checkout-right{position:static} }
+
+@media (max-width: 768px) {
+  .checkout-layout { grid-template-columns:1fr !important; flex-direction:column; }
+  .checkout-sidebar { order:-1; }
+  .checkout-page { padding:20px 16px 40px; }
+  .crypto-grid { grid-template-columns:1fr 1fr !important; }
+}

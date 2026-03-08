@@ -21,3 +21,9 @@
 
 .fullscreen-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:500; display:flex; align-items:center; justify-content:center; cursor:zoom-out; }
 .fullscreen-overlay img { max-width:90vw; max-height:90vh; border-radius:var(--radius); }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .table { min-width:580px; }
+  .admin-topbar { flex-direction:column; align-items:flex-start; gap:12px; }
+}
