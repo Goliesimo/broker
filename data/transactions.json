@@ -1,0 +1,35 @@
+[
+  {
+    "id": "tx-001",
+    "userId": "u-demo",
+    "user": "Demo User",
+    "type": "deposit",
+    "amount": 5000,
+    "status": "completed",
+    "date": "2026-02-01",
+    "method": "USDT",
+    "plan": "pro"
+  },
+  {
+    "id": "tx-002",
+    "userId": "u-demo",
+    "user": "Demo User",
+    "type": "profit",
+    "amount": 600,
+    "status": "completed",
+    "date": "2026-02-10",
+    "method": "System",
+    "plan": "pro"
+  },
+  {
+    "id": "tx-003",
+    "userId": "u-demo",
+    "user": "Demo User",
+    "type": "withdrawal",
+    "amount": 400,
+    "status": "completed",
+    "date": "2026-01-20",
+    "method": "USDT",
+    "plan": "pro"
+  }
+]

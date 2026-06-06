@@ -1,0 +1,131 @@
+/* [project]/app/styles/admin-transactions.css [app-client] (css) */
+.txn-summary-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+  display: grid;
+}
+
+.txn-summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+
+.txn-summary-label {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.txn-summary-value {
+  font-family: var(--font-display);
+  margin-bottom: 4px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.txn-summary-sub {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.txn-filters {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.txn-toolbar {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  display: flex;
+}
+
+.txn-type-badge {
+  text-transform: capitalize;
+  border-radius: 99px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+}
+
+.txn-type-deposit {
+  color: var(--teal);
+  background: #00d4aa1a;
+}
+
+.txn-type-withdrawal {
+  color: var(--red);
+  background: #ff4d6a1a;
+}
+
+.txn-type-profit {
+  color: var(--gold);
+  background: #ffb8001a;
+}
+
+.txn-actions {
+  gap: 6px;
+  display: flex;
+}
+
+.approve-btn {
+  color: var(--teal);
+  cursor: pointer;
+  transition: var(--transition);
+  background: #00d4aa1a;
+  border: 1px solid #00d4aa40;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.approve-btn:hover {
+  background: #00d4aa33;
+}
+
+.reject-btn {
+  color: var(--red);
+  cursor: pointer;
+  transition: var(--transition);
+  background: #ff4d6a1a;
+  border: 1px solid #ff4d6a40;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.reject-btn:hover {
+  background: #ff4d6a33;
+}
+
+@media (max-width: 768px) {
+  .table {
+    min-width: 580px;
+  }
+
+  .admin-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  div[style*="overflow-x"] {
+    overflow-x: auto;
+  }
+}
+
+/*# sourceMappingURL=app_styles_admin-transactions_css_bad6b30c._.single.css.map*/

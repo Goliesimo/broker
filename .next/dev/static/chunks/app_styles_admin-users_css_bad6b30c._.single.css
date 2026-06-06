@@ -1,0 +1,264 @@
+/* [project]/app/styles/admin-users.css [app-client] (css) */
+.users-filters {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  display: flex;
+}
+
+.search-wrap {
+  flex: 1;
+  min-width: 240px;
+  position: relative;
+}
+
+.search-icon {
+  pointer-events: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+}
+
+.search-input {
+  padding-left: 42px !important;
+}
+
+.filter-btn {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+  border-color: var(--border-2);
+}
+
+.filter-btn.active {
+  color: var(--teal);
+  background: #00d4aa1a;
+  border-color: #00d4aa4d;
+}
+
+.users-table-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.users-table-header {
+  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  display: flex;
+}
+
+.users-table-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.users-count {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #050b18;
+  border-radius: 50%;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-email {
+  color: var(--text-dim);
+  margin-top: 1px;
+  font-size: 11px;
+}
+
+.plan-chip {
+  text-transform: capitalize;
+  border: 1px solid;
+  border-radius: 99px;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+}
+
+.actions-cell {
+  align-items: center;
+  gap: 6px;
+  display: flex;
+}
+
+.icon-btn {
+  border: 1px solid var(--border);
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  transition: var(--transition);
+  color: var(--text-dim);
+  background: none;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  display: flex;
+}
+
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border-2);
+}
+
+.icon-btn.danger:hover {
+  color: var(--red);
+  background: #ff4d6a1a;
+  border-color: #ff4d6a4d;
+}
+
+.user-modal {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-xl);
+  width: 520px;
+  max-width: 90vw;
+  max-height: 90vh;
+  animation: .3s fadeUp;
+  overflow-y: auto;
+}
+
+.user-modal-head {
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 28px 0;
+  display: flex;
+}
+
+.user-modal-body {
+  padding: 24px 28px 28px;
+}
+
+.user-modal-avatar {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #050b18;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 12px;
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+}
+
+.user-modal-name {
+  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.user-modal-email {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.user-info-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0;
+  display: grid;
+}
+
+.user-info-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.user-info-label {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.user-info-value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.user-modal-actions {
+  gap: 10px;
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .users-table-card {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .user-modal {
+    width: 95vw !important;
+    max-width: 95vw !important;
+  }
+
+  .user-info-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .user-modal-head {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .user-modal-actions {
+    flex-wrap: wrap;
+  }
+
+  .user-modal-actions .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/*# sourceMappingURL=app_styles_admin-users_css_bad6b30c._.single.css.map*/

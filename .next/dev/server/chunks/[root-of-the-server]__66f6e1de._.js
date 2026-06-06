@@ -1,0 +1,423 @@
+module.exports = [
+"[externals]/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js [external] (next/dist/compiled/next-server/app-route-turbo.runtime.dev.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/compiled/next-server/app-route-turbo.runtime.dev.js", () => require("next/dist/compiled/next-server/app-route-turbo.runtime.dev.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/compiled/@opentelemetry/api [external] (next/dist/compiled/@opentelemetry/api, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/compiled/@opentelemetry/api", () => require("next/dist/compiled/@opentelemetry/api"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/compiled/next-server/app-page-turbo.runtime.dev.js [external] (next/dist/compiled/next-server/app-page-turbo.runtime.dev.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/compiled/next-server/app-page-turbo.runtime.dev.js", () => require("next/dist/compiled/next-server/app-page-turbo.runtime.dev.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/work-unit-async-storage.external.js [external] (next/dist/server/app-render/work-unit-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/work-unit-async-storage.external.js", () => require("next/dist/server/app-render/work-unit-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/work-async-storage.external.js [external] (next/dist/server/app-render/work-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/work-async-storage.external.js", () => require("next/dist/server/app-render/work-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/shared/lib/no-fallback-error.external.js [external] (next/dist/shared/lib/no-fallback-error.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/shared/lib/no-fallback-error.external.js", () => require("next/dist/shared/lib/no-fallback-error.external.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/after-task-async-storage.external.js [external] (next/dist/server/app-render/after-task-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/after-task-async-storage.external.js", () => require("next/dist/server/app-render/after-task-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[project]/lib/db.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "plansDb",
+    ()=>plansDb,
+    "subscriptionsDb",
+    ()=>subscriptionsDb,
+    "transactionsDb",
+    ()=>transactionsDb,
+    "usersDb",
+    ()=>usersDb
+]);
+// lib/db.js — MongoDB database layer
+var __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__ = __turbopack_context__.i("[externals]/mongoose [external] (mongoose, cjs, [project]/node_modules/mongoose)");
+;
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) throw new Error("Please define MONGODB_URI in .env.local");
+let cached = /*TURBOPACK member replacement*/ __turbopack_context__.g._mongoose || {
+    conn: null,
+    promise: null
+};
+/*TURBOPACK member replacement*/ __turbopack_context__.g._mongoose = cached;
+async function connectDB() {
+    if (cached.conn) return cached.conn;
+    if (!cached.promise) {
+        cached.promise = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].connect(MONGODB_URI).then((m)=>m);
+    }
+    cached.conn = await cached.promise;
+    return cached.conn;
+}
+// ── Schemas ──────────────────────────────────────────────────
+const UserSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema({
+    id: {
+        type: String,
+        unique: true
+    },
+    name: String,
+    email: {
+        type: String,
+        unique: true,
+        lowercase: true
+    },
+    password: String,
+    role: {
+        type: String,
+        default: "user"
+    },
+    plan: {
+        type: String,
+        default: "starter"
+    },
+    balance: {
+        type: Number,
+        default: 0
+    },
+    invested: {
+        type: Number,
+        default: 0
+    },
+    profit: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        default: "active"
+    },
+    createdAt: {
+        type: String,
+        default: ()=>new Date().toISOString()
+    },
+    lastActive: {
+        type: String,
+        default: ()=>new Date().toISOString()
+    },
+    avatar: {
+        type: String,
+        default: ""
+    }
+}, {
+    collection: "users"
+});
+const TransactionSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema({
+    id: {
+        type: String,
+        unique: true
+    },
+    userId: String,
+    user: String,
+    type: String,
+    amount: Number,
+    status: {
+        type: String,
+        default: "pending"
+    },
+    date: String,
+    method: String,
+    plan: String
+}, {
+    collection: "transactions"
+});
+const SubscriptionSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema({
+    id: {
+        type: String,
+        unique: true
+    },
+    userId: String,
+    userName: String,
+    userEmail: String,
+    planId: String,
+    planName: String,
+    planPrice: Number,
+    crypto: String,
+    walletAddress: String,
+    txid: String,
+    senderWallet: String,
+    screenshotBase64: String,
+    status: {
+        type: String,
+        default: "pending"
+    },
+    note: String,
+    submittedAt: {
+        type: String,
+        default: ()=>new Date().toISOString()
+    },
+    reviewedAt: String
+}, {
+    collection: "subscriptions"
+});
+// ── Models ───────────────────────────────────────────────────
+const User = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].models.User || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].model("User", UserSchema);
+const Transaction = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].models.Transaction || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].model("Transaction", TransactionSchema);
+const Subscription = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].models.Subscription || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].model("Subscription", SubscriptionSchema);
+const usersDb = {
+    async getAll () {
+        await connectDB();
+        return User.find().lean();
+    },
+    async findById (id) {
+        await connectDB();
+        return User.findOne({
+            id
+        }).lean();
+    },
+    async findByEmail (email) {
+        await connectDB();
+        return User.findOne({
+            email: email.toLowerCase()
+        }).lean();
+    },
+    async create (data) {
+        await connectDB();
+        const user = new User(data);
+        await user.save();
+        return user.toObject();
+    },
+    async update (id, updates) {
+        await connectDB();
+        return User.findOneAndUpdate({
+            id
+        }, updates, {
+            new: true
+        }).lean();
+    },
+    async delete (id) {
+        await connectDB();
+        return User.deleteOne({
+            id
+        });
+    }
+};
+const transactionsDb = {
+    async getAll () {
+        await connectDB();
+        return Transaction.find().lean();
+    },
+    async filter ({ userId, status, type } = {}) {
+        await connectDB();
+        const q = {};
+        if (userId) q.userId = userId;
+        if (status) q.status = status;
+        if (type) q.type = type;
+        return Transaction.find(q).lean();
+    },
+    async create (data) {
+        await connectDB();
+        const tx = new Transaction(data);
+        await tx.save();
+        return tx.toObject();
+    },
+    async update (id, updates) {
+        await connectDB();
+        return Transaction.findOneAndUpdate({
+            id
+        }, updates, {
+            new: true
+        }).lean();
+    }
+};
+const subscriptionsDb = {
+    async getAll () {
+        await connectDB();
+        return Subscription.find().lean();
+    },
+    async filter ({ status, userId } = {}) {
+        await connectDB();
+        const q = {};
+        if (status) q.status = status;
+        if (userId) q.userId = userId;
+        return Subscription.find(q).lean();
+    },
+    async create (data) {
+        await connectDB();
+        const sub = new Subscription(data);
+        await sub.save();
+        return sub.toObject();
+    },
+    async updateStatus (id, status, note = "") {
+        await connectDB();
+        const sub = await Subscription.findOneAndUpdate({
+            id
+        }, {
+            status,
+            note,
+            reviewedAt: new Date().toISOString()
+        }, {
+            new: true
+        }).lean();
+        if (!sub) throw new Error("SUB_NOT_FOUND");
+        return sub;
+    }
+};
+// ── PlanSchema ───────────────────────────────────────────────
+const PlanSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema({
+    id: {
+        type: String,
+        unique: true
+    },
+    name: String,
+    roi: Number,
+    price: Number,
+    badge: String,
+    color: String,
+    features: [
+        String
+    ],
+    notIncluded: [
+        String
+    ]
+}, {
+    collection: "plans"
+});
+const Plan = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].models.Plan || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].model("Plan", PlanSchema);
+const plansDb = {
+    async getAll () {
+        await connectDB();
+        return Plan.find().lean();
+    },
+    async upsert (data) {
+        await connectDB();
+        return Plan.findOneAndUpdate({
+            id: data.id
+        }, data, {
+            upsert: true,
+            new: true
+        }).lean();
+    },
+    async update (id, updates) {
+        await connectDB();
+        return Plan.findOneAndUpdate({
+            id
+        }, updates, {
+            new: true
+        }).lean();
+    }
+};
+}),
+"[project]/app/api/auth/login/route.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "POST",
+    ()=>POST
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/db.js [app-route] (ecmascript)");
+;
+;
+const DEMO_USERS = [
+    {
+        id: "u-admin",
+        name: "Admin User",
+        email: "admin@demo.com",
+        password: "password123",
+        role: "admin",
+        plan: "titan",
+        balance: 0,
+        invested: 0,
+        profit: 0,
+        status: "active"
+    },
+    {
+        id: "u-demo",
+        name: "Demo User",
+        email: "user@demo.com",
+        password: "password123",
+        role: "user",
+        plan: "pro",
+        balance: 6200,
+        invested: 5000,
+        profit: 1200,
+        status: "active"
+    }
+];
+async function POST(request) {
+    try {
+        const { email, password } = await request.json();
+        if (!email || !password) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: "Email and password are required."
+            }, {
+                status: 400
+            });
+        }
+        // Check MongoDB first, then fall back to demo users
+        let user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["usersDb"].findByEmail(email).catch(()=>null);
+        if (!user) {
+            user = DEMO_USERS.find((u)=>u.email.toLowerCase() === email.toLowerCase());
+        }
+        if (!user) return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            error: "No account found with this email."
+        }, {
+            status: 404
+        });
+        if (user.password !== password) return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            error: "Incorrect password."
+        }, {
+            status: 401
+        });
+        if (user.status === "suspended") return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            error: "Account suspended. Contact support."
+        }, {
+            status: 403
+        });
+        const { password: _, ...safeUser } = user;
+        const session = {
+            id: safeUser.id,
+            email: safeUser.email,
+            role: safeUser.role,
+            name: safeUser.name,
+            plan: safeUser.plan
+        };
+        const res = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            success: true,
+            user: safeUser
+        }, {
+            status: 200
+        });
+        res.cookies.set("cv_session", JSON.stringify(session), {
+            httpOnly: false,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7,
+            path: "/"
+        });
+        return res;
+    } catch (err) {
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            error: "Server error: " + err.message
+        }, {
+            status: 500
+        });
+    }
+}
+}),
+];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__66f6e1de._.js.map

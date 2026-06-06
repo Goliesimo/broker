@@ -1,0 +1,119 @@
+/* [project]/app/styles/admin-plans.css [app-client] (css) */
+.plans-admin-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+  display: grid;
+}
+
+.admin-plan-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.admin-plan-card:hover {
+  border-color: var(--border-2);
+}
+
+.admin-plan-card-head {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+}
+
+.admin-plan-card-name {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-plan-card-roi {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.admin-plan-card-body {
+  padding: 20px 24px;
+}
+
+.admin-plan-stat-row {
+  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  display: flex;
+}
+
+.admin-plan-stat-row:last-child {
+  border-bottom: none;
+}
+
+.admin-plan-stat-label {
+  color: var(--text-dim);
+}
+
+.admin-plan-stat-value {
+  font-weight: 600;
+}
+
+.admin-plan-card-foot {
+  border-top: 1px solid var(--border);
+  gap: 8px;
+  padding: 16px 24px;
+  display: flex;
+}
+
+.plan-edit-modal {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-xl);
+  width: 500px;
+  max-width: 90vw;
+  padding: 36px;
+  animation: .3s fadeUp;
+}
+
+.plan-edit-title {
+  margin-bottom: 6px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.plan-edit-sub {
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  font-size: 14px;
+}
+
+.plan-edit-form {
+  flex-direction: column;
+  gap: 18px;
+  display: flex;
+}
+
+.plan-edit-row {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  display: grid;
+}
+
+@media (max-width: 900px) {
+  .plans-admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .plans-admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*# sourceMappingURL=app_styles_admin-plans_css_bad6b30c._.single.css.map*/

@@ -1,0 +1,228 @@
+/* [project]/app/styles/register.css [app-client] (css) */
+.register-page {
+  grid-template-columns: 1fr 1.3fr;
+  min-height: 100vh;
+  display: grid;
+}
+
+.register-left {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-left-bg {
+  pointer-events: none;
+  background: radial-gradient(100% 60% at -10% 30%, #00d4aa1a, #0000 60%), radial-gradient(60% 50% at 110% 70%, #7b61ff14, #0000 60%);
+  position: absolute;
+  inset: 0;
+}
+
+.register-logo {
+  font-family: var(--font-display);
+  z-index: 1;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  position: relative;
+}
+
+.register-logo-icon {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  display: flex;
+}
+
+.register-plan-preview {
+  z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+}
+
+.register-plan-title {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.register-plan-cards {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+
+.register-plan-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  display: flex;
+}
+
+.register-plan-item:hover {
+  border-color: var(--border-2);
+}
+
+.register-plan-item.selected {
+  border-color: var(--teal);
+  background: #00d4aa0d;
+}
+
+.register-plan-item-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.register-plan-item-price {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.register-plan-item-roi {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.register-right {
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 64px;
+  display: flex;
+}
+
+.register-right-title {
+  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.register-right-sub {
+  color: var(--text-dim);
+  margin-bottom: 36px;
+  font-size: 15px;
+}
+
+.register-form {
+  flex-direction: column;
+  gap: 18px;
+  display: flex;
+}
+
+.register-form-row {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  display: grid;
+}
+
+.plan-selector-grid {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+  display: grid;
+}
+
+.plan-selector-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--surface-2);
+  padding: 12px 6px;
+}
+
+.plan-selector-item:hover {
+  border-color: var(--border-2);
+}
+
+.plan-selector-item.active {
+  border-color: var(--teal);
+  background: #00d4aa14;
+}
+
+.plan-selector-name {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.plan-selector-roi {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.plan-selector-price {
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+.terms-check {
+  color: var(--text-dim);
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  display: flex;
+}
+
+.terms-check input {
+  accent-color: var(--teal);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.terms-check a {
+  color: var(--teal);
+}
+
+.spinner {
+  border: 2px solid #0000004d;
+  border-top-color: #050b18;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+@media (max-width: 900px) {
+  .register-page {
+    grid-template-columns: 1fr;
+  }
+
+  .register-left {
+    display: none;
+  }
+
+  .register-right {
+    padding: 32px 24px;
+  }
+
+  .plan-selector-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/*# sourceMappingURL=app_styles_register_01bc6cb4.css.map*/
