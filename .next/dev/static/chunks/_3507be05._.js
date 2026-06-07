@@ -1571,7 +1571,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$admin$2f$page$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/admin/page.js [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
@@ -1584,49 +1584,1688 @@ const PLAN_COLORS = {
     elite: "#FFB800",
     titan: "#FF6B35"
 };
-// ── Wallet config stored in localStorage as fallback ─────────
-const DEFAULT_WALLETS = {
-    "USDT (TRC20)": {
-        address: "TYourTRC20WalletAddressHere",
-        network: "TRON Network (TRC20)",
-        symbol: "USDT"
-    },
-    "USDT (ERC20)": {
-        address: "0xYourERC20WalletAddressHere",
-        network: "Ethereum Network (ERC20)",
-        symbol: "USDT"
-    },
-    "Bitcoin (BTC)": {
-        address: "bc1YourBitcoinWalletAddressHere",
-        network: "Bitcoin Network",
-        symbol: "BTC"
-    },
-    "Ethereum (ETH)": {
-        address: "0xYourEthereumWalletAddressHere",
-        network: "Ethereum Network (ETH)",
-        symbol: "ETH"
-    }
+const CRYPTO_ICONS = {
+    USDT: "💵",
+    BTC: "₿",
+    ETH: "Ξ",
+    BNB: "🔶",
+    SOL: "◎",
+    LTC: "Ł",
+    XRP: "✕"
 };
-function loadWallets() {
-    try {
-        return JSON.parse(localStorage.getItem("cv_wallets")) || DEFAULT_WALLETS;
-    } catch  {
-        return DEFAULT_WALLETS;
-    }
-}
-function saveWallets(w) {
-    try {
-        localStorage.setItem("cv_wallets", JSON.stringify(w));
-    } catch  {}
-}
-function AdminPlans() {
+const DEFAULT_CHECKOUT = {
+    wallets: {
+        "USDT (TRC20)": {
+            address: "",
+            network: "TRON Network (TRC20)",
+            icon: "💵",
+            symbol: "USDT",
+            enabled: true
+        },
+        "USDT (ERC20)": {
+            address: "",
+            network: "Ethereum Network (ERC20)",
+            icon: "💵",
+            symbol: "USDT",
+            enabled: true
+        },
+        "Bitcoin (BTC)": {
+            address: "",
+            network: "Bitcoin Network",
+            icon: "₿",
+            symbol: "BTC",
+            enabled: true
+        },
+        "Ethereum (ETH)": {
+            address: "",
+            network: "Ethereum Network (ETH)",
+            icon: "Ξ",
+            symbol: "ETH",
+            enabled: true
+        }
+    },
+    instructions: "Send the exact amount to the wallet address below. Your plan will be activated within 24 hours of payment verification.",
+    activationTime: "24 hours",
+    warningText: "Only send via the correct network. Sending on the wrong network will result in permanent loss of funds.",
+    screenshotRequired: false,
+    txidRequired: true
+};
+// ── Checkout Editor Component (defined outside to avoid focus loss) ──
+function CheckoutEditor(t0) {
     _s();
-    const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(73);
-    if ($[0] !== "3d3dcf244883c61f351202c5565080fedda8ea17292b580790e591825459f899") {
-        for(let $i = 0; $i < 73; $i += 1){
+    const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(110);
+    if ($[0] !== "c8e6a64aec1ca921f1188ac5e574c180699b97620f80536dd785984099317b7a") {
+        for(let $i = 0; $i < 110; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "3d3dcf244883c61f351202c5565080fedda8ea17292b580790e591825459f899";
+        $[0] = "c8e6a64aec1ca921f1188ac5e574c180699b97620f80536dd785984099317b7a";
+    }
+    const { checkout, setCheckout, onSave, saving, toast } = t0;
+    const [editWallet, setEditWallet] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    let t1;
+    if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
+        t1 = {};
+        $[1] = t1;
+    } else {
+        t1 = $[1];
+    }
+    const [walletForm, setWalletForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(t1);
+    const [addingNew, setAddingNew] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    let t2;
+    if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
+        t2 = {
+            key: "",
+            address: "",
+            network: "",
+            icon: "\uD83D\uDCB5",
+            symbol: "",
+            enabled: true
+        };
+        $[2] = t2;
+    } else {
+        t2 = $[2];
+    }
+    const [newWallet, setNewWallet] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(t2);
+    let t3;
+    if ($[3] !== setCheckout) {
+        t3 = ({
+            "CheckoutEditor[updateWallet]": (key, field, val)=>{
+                setCheckout({
+                    "CheckoutEditor[updateWallet > setCheckout()]": (c)=>({
+                            ...c,
+                            wallets: {
+                                ...c.wallets,
+                                [key]: {
+                                    ...c.wallets[key],
+                                    [field]: val
+                                }
+                            }
+                        })
+                }["CheckoutEditor[updateWallet > setCheckout()]"]);
+            }
+        })["CheckoutEditor[updateWallet]"];
+        $[3] = setCheckout;
+        $[4] = t3;
+    } else {
+        t3 = $[4];
+    }
+    const updateWallet = t3;
+    let t4;
+    if ($[5] !== checkout.wallets || $[6] !== updateWallet) {
+        t4 = ({
+            "CheckoutEditor[toggleWallet]": (key_0)=>{
+                updateWallet(key_0, "enabled", !checkout.wallets[key_0].enabled);
+            }
+        })["CheckoutEditor[toggleWallet]"];
+        $[5] = checkout.wallets;
+        $[6] = updateWallet;
+        $[7] = t4;
+    } else {
+        t4 = $[7];
+    }
+    const toggleWallet = t4;
+    let t5;
+    if ($[8] !== checkout.wallets || $[9] !== setCheckout) {
+        t5 = ({
+            "CheckoutEditor[deleteWallet]": (key_1)=>{
+                if (!confirm(`Remove "${key_1}" payment option?`)) {
+                    return;
+                }
+                const updated = {
+                    ...checkout.wallets
+                };
+                delete updated[key_1];
+                setCheckout({
+                    "CheckoutEditor[deleteWallet > setCheckout()]": (c_0)=>({
+                            ...c_0,
+                            wallets: updated
+                        })
+                }["CheckoutEditor[deleteWallet > setCheckout()]"]);
+            }
+        })["CheckoutEditor[deleteWallet]"];
+        $[8] = checkout.wallets;
+        $[9] = setCheckout;
+        $[10] = t5;
+    } else {
+        t5 = $[10];
+    }
+    const deleteWallet = t5;
+    let t6;
+    if ($[11] !== checkout.wallets) {
+        t6 = ({
+            "CheckoutEditor[openEditWallet]": (key_2)=>{
+                setEditWallet(key_2);
+                setWalletForm({
+                    ...checkout.wallets[key_2]
+                });
+            }
+        })["CheckoutEditor[openEditWallet]"];
+        $[11] = checkout.wallets;
+        $[12] = t6;
+    } else {
+        t6 = $[12];
+    }
+    const openEditWallet = t6;
+    let t7;
+    if ($[13] !== editWallet || $[14] !== setCheckout || $[15] !== walletForm) {
+        t7 = ({
+            "CheckoutEditor[saveWalletEdit]": (e)=>{
+                e.preventDefault();
+                setCheckout({
+                    "CheckoutEditor[saveWalletEdit > setCheckout()]": (c_1)=>({
+                            ...c_1,
+                            wallets: {
+                                ...c_1.wallets,
+                                [editWallet]: {
+                                    ...c_1.wallets[editWallet],
+                                    ...walletForm
+                                }
+                            }
+                        })
+                }["CheckoutEditor[saveWalletEdit > setCheckout()]"]);
+                setEditWallet(null);
+            }
+        })["CheckoutEditor[saveWalletEdit]"];
+        $[13] = editWallet;
+        $[14] = setCheckout;
+        $[15] = walletForm;
+        $[16] = t7;
+    } else {
+        t7 = $[16];
+    }
+    const saveWalletEdit = t7;
+    let t8;
+    if ($[17] !== newWallet.address || $[18] !== newWallet.icon || $[19] !== newWallet.key || $[20] !== newWallet.network || $[21] !== newWallet.symbol || $[22] !== setCheckout) {
+        t8 = ({
+            "CheckoutEditor[addNewWallet]": (e_0)=>{
+                e_0.preventDefault();
+                if (!newWallet.key || !newWallet.address || !newWallet.symbol) {
+                    return;
+                }
+                setCheckout({
+                    "CheckoutEditor[addNewWallet > setCheckout()]": (c_2)=>({
+                            ...c_2,
+                            wallets: {
+                                ...c_2.wallets,
+                                [newWallet.key]: {
+                                    address: newWallet.address,
+                                    network: newWallet.network,
+                                    icon: newWallet.icon,
+                                    symbol: newWallet.symbol,
+                                    enabled: true
+                                }
+                            }
+                        })
+                }["CheckoutEditor[addNewWallet > setCheckout()]"]);
+                setAddingNew(false);
+                setNewWallet({
+                    key: "",
+                    address: "",
+                    network: "",
+                    icon: "\uD83D\uDCB5",
+                    symbol: "",
+                    enabled: true
+                });
+            }
+        })["CheckoutEditor[addNewWallet]"];
+        $[17] = newWallet.address;
+        $[18] = newWallet.icon;
+        $[19] = newWallet.key;
+        $[20] = newWallet.network;
+        $[21] = newWallet.symbol;
+        $[22] = setCheckout;
+        $[23] = t8;
+    } else {
+        t8 = $[23];
+    }
+    const addNewWallet = t8;
+    let t9;
+    if ($[24] === Symbol.for("react.memo_cache_sentinel")) {
+        t9 = {
+            display: "flex",
+            flexDirection: "column",
+            gap: 24
+        };
+        $[24] = t9;
+    } else {
+        t9 = $[24];
+    }
+    let t10;
+    if ($[25] === Symbol.for("react.memo_cache_sentinel")) {
+        t10 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "users-table-title",
+                    children: "\uD83D\uDCB3 Payment Methods & Wallet Addresses"
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 268,
+                    columnNumber: 16
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        fontSize: 13,
+                        color: "var(--text-dim)",
+                        marginTop: 4
+                    },
+                    children: "Manage which crypto options users see on the checkout page"
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 268,
+                    columnNumber: 108
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 268,
+            columnNumber: 11
+        }, this);
+        $[25] = t10;
+    } else {
+        t10 = $[25];
+    }
+    let t11;
+    if ($[26] === Symbol.for("react.memo_cache_sentinel")) {
+        t11 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "users-table-header",
+            children: [
+                t10,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                    className: "btn btn-primary btn-sm",
+                    onClick: {
+                        "CheckoutEditor[<button>.onClick]": ()=>setAddingNew(true)
+                    }["CheckoutEditor[<button>.onClick]"],
+                    children: "➕ Add Payment Method"
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 279,
+                    columnNumber: 52
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 279,
+            columnNumber: 11
+        }, this);
+        $[26] = t11;
+    } else {
+        t11 = $[26];
+    }
+    let t12;
+    if ($[27] === Symbol.for("react.memo_cache_sentinel")) {
+        t12 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                children: [
+                    "Method",
+                    "Symbol",
+                    "Network",
+                    "Wallet Address",
+                    "Status",
+                    "Actions"
+                ].map(_CheckoutEditorAnonymous)
+            }, void 0, false, {
+                fileName: "[project]/app/admin/plans/page.js",
+                lineNumber: 288,
+                columnNumber: 18
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 288,
+            columnNumber: 11
+        }, this);
+        $[27] = t12;
+    } else {
+        t12 = $[27];
+    }
+    let t13;
+    if ($[28] !== checkout.wallets || $[29] !== deleteWallet || $[30] !== openEditWallet || $[31] !== toggleWallet) {
+        t13 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "users-table-card",
+            children: [
+                t11,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                    className: "table",
+                    children: [
+                        t12,
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                            children: Object.entries(checkout.wallets || {}).map({
+                                "CheckoutEditor[(anonymous)()]": (t14)=>{
+                                    const [key_3, w] = t14;
+                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                        style: {
+                                            opacity: w.enabled === false ? 0.5 : 1
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                style: {
+                                                    fontWeight: 600
+                                                },
+                                                children: [
+                                                    w.icon,
+                                                    " ",
+                                                    key_3
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 300,
+                                                columnNumber: 18
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: {
+                                                        fontFamily: "var(--font-mono)",
+                                                        fontSize: 12,
+                                                        color: "var(--teal)"
+                                                    },
+                                                    children: w.symbol
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/admin/plans/page.js",
+                                                    lineNumber: 302,
+                                                    columnNumber: 45
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 302,
+                                                columnNumber: 41
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                style: {
+                                                    fontSize: 12,
+                                                    color: "var(--text-dim)"
+                                                },
+                                                children: w.network
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 306,
+                                                columnNumber: 44
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: {
+                                                        fontFamily: "var(--font-mono)",
+                                                        fontSize: 11,
+                                                        color: w.address && !w.address.includes("YourWallet") ? "var(--text)" : "var(--red)",
+                                                        wordBreak: "break-all"
+                                                    },
+                                                    children: w.address || "\u26A0 Not set"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/admin/plans/page.js",
+                                                    lineNumber: 309,
+                                                    columnNumber: 40
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 309,
+                                                columnNumber: 36
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: {
+                                                        "CheckoutEditor[(anonymous)() > <button>.onClick]": ()=>toggleWallet(key_3)
+                                                    }["CheckoutEditor[(anonymous)() > <button>.onClick]"],
+                                                    style: {
+                                                        background: w.enabled !== false ? "rgba(0,212,170,0.15)" : "rgba(255,77,106,0.15)",
+                                                        color: w.enabled !== false ? "var(--teal)" : "var(--red)",
+                                                        border: "none",
+                                                        borderRadius: 20,
+                                                        padding: "4px 12px",
+                                                        fontSize: 12,
+                                                        fontWeight: 600,
+                                                        cursor: "pointer"
+                                                    },
+                                                    children: w.enabled !== false ? "\u25CF Enabled" : "\u25CB Disabled"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/admin/plans/page.js",
+                                                    lineNumber: 314,
+                                                    columnNumber: 69
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 314,
+                                                columnNumber: 65
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "actions-cell",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "icon-btn",
+                                                            title: "Edit",
+                                                            onClick: {
+                                                                "CheckoutEditor[(anonymous)() > <button>.onClick]": ()=>openEditWallet(key_3)
+                                                            }["CheckoutEditor[(anonymous)() > <button>.onClick]"],
+                                                            children: "✏️"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/admin/plans/page.js",
+                                                            lineNumber: 325,
+                                                            columnNumber: 130
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            className: "icon-btn danger",
+                                                            title: "Delete",
+                                                            onClick: {
+                                                                "CheckoutEditor[(anonymous)() > <button>.onClick]": ()=>deleteWallet(key_3)
+                                                            }["CheckoutEditor[(anonymous)() > <button>.onClick]"],
+                                                            children: "🗑"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/admin/plans/page.js",
+                                                            lineNumber: 327,
+                                                            columnNumber: 87
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/admin/plans/page.js",
+                                                    lineNumber: 325,
+                                                    columnNumber: 100
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 325,
+                                                columnNumber: 96
+                                            }, this)
+                                        ]
+                                    }, key_3, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 298,
+                                        columnNumber: 22
+                                    }, this);
+                                }
+                            }["CheckoutEditor[(anonymous)()]"])
+                        }, void 0, false, {
+                            fileName: "[project]/app/admin/plans/page.js",
+                            lineNumber: 295,
+                            columnNumber: 80
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 295,
+                    columnNumber: 50
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 295,
+            columnNumber: 11
+        }, this);
+        $[28] = checkout.wallets;
+        $[29] = deleteWallet;
+        $[30] = openEditWallet;
+        $[31] = toggleWallet;
+        $[32] = t13;
+    } else {
+        t13 = $[32];
+    }
+    let t14;
+    let t15;
+    if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
+        t14 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "users-table-header",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "users-table-title",
+                children: "📝 Checkout Page Text"
+            }, void 0, false, {
+                fileName: "[project]/app/admin/plans/page.js",
+                lineNumber: 343,
+                columnNumber: 47
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 343,
+            columnNumber: 11
+        }, this);
+        t15 = {
+            padding: "0 24px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16
+        };
+        $[33] = t14;
+        $[34] = t15;
+    } else {
+        t14 = $[33];
+        t15 = $[34];
+    }
+    let t16;
+    if ($[35] === Symbol.for("react.memo_cache_sentinel")) {
+        t16 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            className: "input-label",
+            children: "Instructions / Subtitle Text"
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 358,
+            columnNumber: 11
+        }, this);
+        $[35] = t16;
+    } else {
+        t16 = $[35];
+    }
+    let t17;
+    if ($[36] === Symbol.for("react.memo_cache_sentinel")) {
+        t17 = {
+            resize: "vertical"
+        };
+        $[36] = t17;
+    } else {
+        t17 = $[36];
+    }
+    const t18 = checkout.instructions || "";
+    let t19;
+    if ($[37] !== setCheckout) {
+        t19 = ({
+            "CheckoutEditor[<textarea>.onChange]": (e_1)=>setCheckout({
+                    "CheckoutEditor[<textarea>.onChange > setCheckout()]": (c_3)=>({
+                            ...c_3,
+                            instructions: e_1.target.value
+                        })
+                }["CheckoutEditor[<textarea>.onChange > setCheckout()]"])
+        })["CheckoutEditor[<textarea>.onChange]"];
+        $[37] = setCheckout;
+        $[38] = t19;
+    } else {
+        t19 = $[38];
+    }
+    let t20;
+    if ($[39] !== t18 || $[40] !== t19) {
+        t20 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "form-group",
+            children: [
+                t16,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                    className: "input",
+                    rows: 3,
+                    style: t17,
+                    value: t18,
+                    onChange: t19
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 390,
+                    columnNumber: 44
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 390,
+            columnNumber: 11
+        }, this);
+        $[39] = t18;
+        $[40] = t19;
+        $[41] = t20;
+    } else {
+        t20 = $[41];
+    }
+    let t21;
+    if ($[42] === Symbol.for("react.memo_cache_sentinel")) {
+        t21 = {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 16
+        };
+        $[42] = t21;
+    } else {
+        t21 = $[42];
+    }
+    let t22;
+    if ($[43] === Symbol.for("react.memo_cache_sentinel")) {
+        t22 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            className: "input-label",
+            children: "Activation Time"
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 410,
+            columnNumber: 11
+        }, this);
+        $[43] = t22;
+    } else {
+        t22 = $[43];
+    }
+    const t23 = checkout.activationTime || "";
+    let t24;
+    if ($[44] !== setCheckout) {
+        t24 = ({
+            "CheckoutEditor[<input>.onChange]": (e_2)=>setCheckout({
+                    "CheckoutEditor[<input>.onChange > setCheckout()]": (c_4)=>({
+                            ...c_4,
+                            activationTime: e_2.target.value
+                        })
+                }["CheckoutEditor[<input>.onChange > setCheckout()]"])
+        })["CheckoutEditor[<input>.onChange]"];
+        $[44] = setCheckout;
+        $[45] = t24;
+    } else {
+        t24 = $[45];
+    }
+    let t25;
+    if ($[46] !== t23 || $[47] !== t24) {
+        t25 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "form-group",
+            children: [
+                t22,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                    className: "input",
+                    placeholder: "e.g. 24 hours",
+                    value: t23,
+                    onChange: t24
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 433,
+                    columnNumber: 44
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 433,
+            columnNumber: 11
+        }, this);
+        $[46] = t23;
+        $[47] = t24;
+        $[48] = t25;
+    } else {
+        t25 = $[48];
+    }
+    let t26;
+    let t27;
+    let t28;
+    let t29;
+    if ($[49] === Symbol.for("react.memo_cache_sentinel")) {
+        t26 = {
+            display: "flex",
+            flexDirection: "column",
+            gap: 8
+        };
+        t27 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            className: "input-label",
+            children: "Submission Requirements"
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 450,
+            columnNumber: 11
+        }, this);
+        t28 = {
+            display: "flex",
+            gap: 16,
+            alignItems: "center",
+            marginTop: 4
+        };
+        t29 = {
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+            fontSize: 13
+        };
+        $[49] = t26;
+        $[50] = t27;
+        $[51] = t28;
+        $[52] = t29;
+    } else {
+        t26 = $[49];
+        t27 = $[50];
+        t28 = $[51];
+        t29 = $[52];
+    }
+    const t30 = checkout.txidRequired !== false;
+    let t31;
+    if ($[53] !== setCheckout) {
+        t31 = ({
+            "CheckoutEditor[<input>.onChange]": (e_3)=>setCheckout({
+                    "CheckoutEditor[<input>.onChange > setCheckout()]": (c_5)=>({
+                            ...c_5,
+                            txidRequired: e_3.target.checked
+                        })
+                }["CheckoutEditor[<input>.onChange > setCheckout()]"])
+        })["CheckoutEditor[<input>.onChange]"];
+        $[53] = setCheckout;
+        $[54] = t31;
+    } else {
+        t31 = $[54];
+    }
+    let t32;
+    if ($[55] !== t30 || $[56] !== t31) {
+        t32 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            style: t29,
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                    type: "checkbox",
+                    checked: t30,
+                    onChange: t31
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 492,
+                    columnNumber: 30
+                }, this),
+                "TXID Required"
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 492,
+            columnNumber: 11
+        }, this);
+        $[55] = t30;
+        $[56] = t31;
+        $[57] = t32;
+    } else {
+        t32 = $[57];
+    }
+    let t33;
+    if ($[58] === Symbol.for("react.memo_cache_sentinel")) {
+        t33 = {
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+            fontSize: 13
+        };
+        $[58] = t33;
+    } else {
+        t33 = $[58];
+    }
+    const t34 = checkout.screenshotRequired === true;
+    let t35;
+    if ($[59] !== setCheckout) {
+        t35 = ({
+            "CheckoutEditor[<input>.onChange]": (e_4)=>setCheckout({
+                    "CheckoutEditor[<input>.onChange > setCheckout()]": (c_6)=>({
+                            ...c_6,
+                            screenshotRequired: e_4.target.checked
+                        })
+                }["CheckoutEditor[<input>.onChange > setCheckout()]"])
+        })["CheckoutEditor[<input>.onChange]"];
+        $[59] = setCheckout;
+        $[60] = t35;
+    } else {
+        t35 = $[60];
+    }
+    let t36;
+    if ($[61] !== t34 || $[62] !== t35) {
+        t36 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            style: t33,
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                    type: "checkbox",
+                    checked: t34,
+                    onChange: t35
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 530,
+                    columnNumber: 30
+                }, this),
+                "Screenshot Required"
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 530,
+            columnNumber: 11
+        }, this);
+        $[61] = t34;
+        $[62] = t35;
+        $[63] = t36;
+    } else {
+        t36 = $[63];
+    }
+    let t37;
+    if ($[64] !== t32 || $[65] !== t36) {
+        t37 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "form-group",
+            style: t26,
+            children: [
+                t27,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: t28,
+                    children: [
+                        t32,
+                        t36
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 539,
+                    columnNumber: 56
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 539,
+            columnNumber: 11
+        }, this);
+        $[64] = t32;
+        $[65] = t36;
+        $[66] = t37;
+    } else {
+        t37 = $[66];
+    }
+    let t38;
+    if ($[67] !== t25 || $[68] !== t37) {
+        t38 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            style: t21,
+            children: [
+                t25,
+                t37
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 548,
+            columnNumber: 11
+        }, this);
+        $[67] = t25;
+        $[68] = t37;
+        $[69] = t38;
+    } else {
+        t38 = $[69];
+    }
+    let t39;
+    if ($[70] === Symbol.for("react.memo_cache_sentinel")) {
+        t39 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+            className: "input-label",
+            children: "Warning Text"
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 557,
+            columnNumber: 11
+        }, this);
+        $[70] = t39;
+    } else {
+        t39 = $[70];
+    }
+    let t40;
+    if ($[71] === Symbol.for("react.memo_cache_sentinel")) {
+        t40 = {
+            resize: "vertical"
+        };
+        $[71] = t40;
+    } else {
+        t40 = $[71];
+    }
+    const t41 = checkout.warningText || "";
+    let t42;
+    if ($[72] !== setCheckout) {
+        t42 = ({
+            "CheckoutEditor[<textarea>.onChange]": (e_5)=>setCheckout({
+                    "CheckoutEditor[<textarea>.onChange > setCheckout()]": (c_7)=>({
+                            ...c_7,
+                            warningText: e_5.target.value
+                        })
+                }["CheckoutEditor[<textarea>.onChange > setCheckout()]"])
+        })["CheckoutEditor[<textarea>.onChange]"];
+        $[72] = setCheckout;
+        $[73] = t42;
+    } else {
+        t42 = $[73];
+    }
+    let t43;
+    if ($[74] !== t41 || $[75] !== t42) {
+        t43 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "form-group",
+            children: [
+                t39,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                    className: "input",
+                    rows: 2,
+                    style: t40,
+                    value: t41,
+                    onChange: t42
+                }, void 0, false, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 589,
+                    columnNumber: 44
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 589,
+            columnNumber: 11
+        }, this);
+        $[74] = t41;
+        $[75] = t42;
+        $[76] = t43;
+    } else {
+        t43 = $[76];
+    }
+    let t44;
+    if ($[77] !== t20 || $[78] !== t38 || $[79] !== t43) {
+        t44 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "users-table-card",
+            children: [
+                t14,
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: t15,
+                    children: [
+                        t20,
+                        t38,
+                        t43
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/admin/plans/page.js",
+                    lineNumber: 598,
+                    columnNumber: 50
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 598,
+            columnNumber: 11
+        }, this);
+        $[77] = t20;
+        $[78] = t38;
+        $[79] = t43;
+        $[80] = t44;
+    } else {
+        t44 = $[80];
+    }
+    let t45;
+    if ($[81] === Symbol.for("react.memo_cache_sentinel")) {
+        t45 = {
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 12
+        };
+        $[81] = t45;
+    } else {
+        t45 = $[81];
+    }
+    let t46;
+    if ($[82] !== toast) {
+        t46 = toast && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            style: {
+                color: toast.includes("\u274C") ? "var(--red)" : "var(--teal)",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center"
+            },
+            children: toast
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 619,
+            columnNumber: 20
+        }, this);
+        $[82] = toast;
+        $[83] = t46;
+    } else {
+        t46 = $[83];
+    }
+    let t47;
+    if ($[84] === Symbol.for("react.memo_cache_sentinel")) {
+        t47 = {
+            minWidth: 160
+        };
+        $[84] = t47;
+    } else {
+        t47 = $[84];
+    }
+    const t48 = saving ? "Saving\u2026" : "\uD83D\uDCBE Save All Changes";
+    let t49;
+    if ($[85] !== onSave || $[86] !== saving || $[87] !== t48) {
+        t49 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+            className: "btn btn-primary",
+            onClick: onSave,
+            disabled: saving,
+            style: t47,
+            children: t48
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 642,
+            columnNumber: 11
+        }, this);
+        $[85] = onSave;
+        $[86] = saving;
+        $[87] = t48;
+        $[88] = t49;
+    } else {
+        t49 = $[88];
+    }
+    let t50;
+    if ($[89] !== t46 || $[90] !== t49) {
+        t50 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            style: t45,
+            children: [
+                t46,
+                t49
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 652,
+            columnNumber: 11
+        }, this);
+        $[89] = t46;
+        $[90] = t49;
+        $[91] = t50;
+    } else {
+        t50 = $[91];
+    }
+    let t51;
+    if ($[92] !== editWallet || $[93] !== saveWalletEdit || $[94] !== walletForm) {
+        t51 = editWallet && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "modal-overlay",
+            onClick: {
+                "CheckoutEditor[<div>.onClick]": ()=>setEditWallet(null)
+            }["CheckoutEditor[<div>.onClick]"],
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "plan-edit-modal",
+                style: {
+                    maxWidth: 500
+                },
+                onClick: _CheckoutEditorDivOnClick,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "plan-edit-title",
+                        children: [
+                            "✏️ Edit ",
+                            editWallet
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 665,
+                        columnNumber: 46
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "plan-edit-sub",
+                        style: {
+                            color: "var(--gold)"
+                        },
+                        children: "⚠️ Double-check the address before saving — errors cause lost payments."
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 665,
+                        columnNumber: 105
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                        className: "plan-edit-form",
+                        onSubmit: saveWalletEdit,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Display Name"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 667,
+                                        columnNumber: 176
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        value: editWallet,
+                                        disabled: true,
+                                        style: {
+                                            opacity: 0.5
+                                        }
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 667,
+                                        columnNumber: 227
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 667,
+                                columnNumber: 148
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "grid",
+                                    gridTemplateColumns: "1fr 1fr",
+                                    gap: 12
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "form-group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "input-label",
+                                                children: "Symbol (e.g. USDT)"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 673,
+                                                columnNumber: 42
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                className: "input",
+                                                value: walletForm.symbol || "",
+                                                onChange: {
+                                                    "CheckoutEditor[<input>.onChange]": (e_7)=>setWalletForm({
+                                                            "CheckoutEditor[<input>.onChange > setWalletForm()]": (f)=>({
+                                                                    ...f,
+                                                                    symbol: e_7.target.value
+                                                                })
+                                                        }["CheckoutEditor[<input>.onChange > setWalletForm()]"])
+                                                }["CheckoutEditor[<input>.onChange]"],
+                                                required: true
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 673,
+                                                columnNumber: 99
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 673,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "form-group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "input-label",
+                                                children: "Icon (emoji)"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 680,
+                                                columnNumber: 106
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                className: "input",
+                                                value: walletForm.icon || "",
+                                                onChange: {
+                                                    "CheckoutEditor[<input>.onChange]": (e_8)=>setWalletForm({
+                                                            "CheckoutEditor[<input>.onChange > setWalletForm()]": (f_0)=>({
+                                                                    ...f_0,
+                                                                    icon: e_8.target.value
+                                                                })
+                                                        }["CheckoutEditor[<input>.onChange > setWalletForm()]"])
+                                                }["CheckoutEditor[<input>.onChange]"],
+                                                maxLength: 4
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 680,
+                                                columnNumber: 157
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 680,
+                                        columnNumber: 78
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 669,
+                                columnNumber: 24
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Network Label"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 687,
+                                        columnNumber: 110
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        placeholder: "e.g. TRON Network (TRC20)",
+                                        value: walletForm.network || "",
+                                        onChange: {
+                                            "CheckoutEditor[<input>.onChange]": (e_9)=>setWalletForm({
+                                                    "CheckoutEditor[<input>.onChange > setWalletForm()]": (f_1)=>({
+                                                            ...f_1,
+                                                            network: e_9.target.value
+                                                        })
+                                                }["CheckoutEditor[<input>.onChange > setWalletForm()]"])
+                                        }["CheckoutEditor[<input>.onChange]"],
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 687,
+                                        columnNumber: 162
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 687,
+                                columnNumber: 82
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Wallet Address"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 694,
+                                        columnNumber: 104
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        value: walletForm.address || "",
+                                        onChange: {
+                                            "CheckoutEditor[<input>.onChange]": (e_10)=>setWalletForm({
+                                                    "CheckoutEditor[<input>.onChange > setWalletForm()]": (f_2)=>({
+                                                            ...f_2,
+                                                            address: e_10.target.value
+                                                        })
+                                                }["CheckoutEditor[<input>.onChange > setWalletForm()]"])
+                                        }["CheckoutEditor[<input>.onChange]"],
+                                        required: true,
+                                        style: {
+                                            fontFamily: "var(--font-mono)",
+                                            fontSize: 12
+                                        }
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 694,
+                                        columnNumber: 157
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 694,
+                                columnNumber: 76
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "flex",
+                                    gap: 12,
+                                    marginTop: 8
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: "btn btn-ghost",
+                                        style: {
+                                            flex: 1
+                                        },
+                                        onClick: {
+                                            "CheckoutEditor[<button>.onClick]": ()=>setEditWallet(null)
+                                        }["CheckoutEditor[<button>.onClick]"],
+                                        children: "Cancel"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 708,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "submit",
+                                        className: "btn btn-primary",
+                                        style: {
+                                            flex: 2
+                                        },
+                                        children: "💾 Save Address"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 712,
+                                        columnNumber: 67
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 704,
+                                columnNumber: 24
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 667,
+                        columnNumber: 89
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/admin/plans/page.js",
+                lineNumber: 663,
+                columnNumber: 41
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 661,
+            columnNumber: 25
+        }, this);
+        $[92] = editWallet;
+        $[93] = saveWalletEdit;
+        $[94] = walletForm;
+        $[95] = t51;
+    } else {
+        t51 = $[95];
+    }
+    let t52;
+    if ($[96] !== addNewWallet || $[97] !== addingNew || $[98] !== newWallet.address || $[99] !== newWallet.icon || $[100] !== newWallet.key || $[101] !== newWallet.network || $[102] !== newWallet.symbol) {
+        t52 = addingNew && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "modal-overlay",
+            onClick: {
+                "CheckoutEditor[<div>.onClick]": ()=>setAddingNew(false)
+            }["CheckoutEditor[<div>.onClick]"],
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "plan-edit-modal",
+                style: {
+                    maxWidth: 500
+                },
+                onClick: _CheckoutEditorDivOnClick2,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "plan-edit-title",
+                        children: "➕ Add Payment Method"
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 728,
+                        columnNumber: 47
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "plan-edit-sub",
+                        children: "Add a new cryptocurrency payment option to the checkout page."
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 728,
+                        columnNumber: 106
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                        className: "plan-edit-form",
+                        onSubmit: addNewWallet,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Display Name (unique key)"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 728,
+                                        columnNumber: 289
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        placeholder: "e.g. Tether (BEP20)",
+                                        value: newWallet.key,
+                                        onChange: {
+                                            "CheckoutEditor[<input>.onChange]": (e_12)=>setNewWallet({
+                                                    "CheckoutEditor[<input>.onChange > setNewWallet()]": (f_3)=>({
+                                                            ...f_3,
+                                                            key: e_12.target.value
+                                                        })
+                                                }["CheckoutEditor[<input>.onChange > setNewWallet()]"])
+                                        }["CheckoutEditor[<input>.onChange]"],
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 728,
+                                        columnNumber: 353
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 728,
+                                columnNumber: 261
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "grid",
+                                    gridTemplateColumns: "1fr 1fr",
+                                    gap: 12
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "form-group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "input-label",
+                                                children: "Symbol"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 739,
+                                                columnNumber: 42
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                className: "input",
+                                                placeholder: "e.g. USDT",
+                                                value: newWallet.symbol,
+                                                onChange: {
+                                                    "CheckoutEditor[<input>.onChange]": (e_13)=>setNewWallet({
+                                                            "CheckoutEditor[<input>.onChange > setNewWallet()]": (f_4)=>({
+                                                                    ...f_4,
+                                                                    symbol: e_13.target.value
+                                                                })
+                                                        }["CheckoutEditor[<input>.onChange > setNewWallet()]"])
+                                                }["CheckoutEditor[<input>.onChange]"],
+                                                required: true
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 739,
+                                                columnNumber: 87
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 739,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "form-group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "input-label",
+                                                children: "Icon (emoji)"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 746,
+                                                columnNumber: 106
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                className: "input",
+                                                placeholder: "\uD83D\uDCB5",
+                                                value: newWallet.icon,
+                                                onChange: {
+                                                    "CheckoutEditor[<input>.onChange]": (e_14)=>setNewWallet({
+                                                            "CheckoutEditor[<input>.onChange > setNewWallet()]": (f_5)=>({
+                                                                    ...f_5,
+                                                                    icon: e_14.target.value
+                                                                })
+                                                        }["CheckoutEditor[<input>.onChange > setNewWallet()]"])
+                                                }["CheckoutEditor[<input>.onChange]"],
+                                                maxLength: 4
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/admin/plans/page.js",
+                                                lineNumber: 746,
+                                                columnNumber: 157
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 746,
+                                        columnNumber: 78
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 735,
+                                columnNumber: 76
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Network"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 753,
+                                        columnNumber: 110
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        placeholder: "e.g. BNB Smart Chain (BEP20)",
+                                        value: newWallet.network,
+                                        onChange: {
+                                            "CheckoutEditor[<input>.onChange]": (e_15)=>setNewWallet({
+                                                    "CheckoutEditor[<input>.onChange > setNewWallet()]": (f_6)=>({
+                                                            ...f_6,
+                                                            network: e_15.target.value
+                                                        })
+                                                }["CheckoutEditor[<input>.onChange > setNewWallet()]"])
+                                        }["CheckoutEditor[<input>.onChange]"],
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 753,
+                                        columnNumber: 156
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 753,
+                                columnNumber: 82
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "form-group",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "input-label",
+                                        children: "Wallet Address"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 760,
+                                        columnNumber: 104
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        className: "input",
+                                        placeholder: "Your wallet address",
+                                        value: newWallet.address,
+                                        onChange: {
+                                            "CheckoutEditor[<input>.onChange]": (e_16)=>setNewWallet({
+                                                    "CheckoutEditor[<input>.onChange > setNewWallet()]": (f_7)=>({
+                                                            ...f_7,
+                                                            address: e_16.target.value
+                                                        })
+                                                }["CheckoutEditor[<input>.onChange > setNewWallet()]"])
+                                        }["CheckoutEditor[<input>.onChange]"],
+                                        required: true,
+                                        style: {
+                                            fontFamily: "var(--font-mono)",
+                                            fontSize: 12
+                                        }
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 760,
+                                        columnNumber: 157
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 760,
+                                columnNumber: 76
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "flex",
+                                    gap: 12,
+                                    marginTop: 8
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: "btn btn-ghost",
+                                        style: {
+                                            flex: 1
+                                        },
+                                        onClick: {
+                                            "CheckoutEditor[<button>.onClick]": ()=>setAddingNew(false)
+                                        }["CheckoutEditor[<button>.onClick]"],
+                                        children: "Cancel"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 774,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "submit",
+                                        className: "btn btn-primary",
+                                        style: {
+                                            flex: 2
+                                        },
+                                        children: "➕ Add Method"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 778,
+                                        columnNumber: 67
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 770,
+                                columnNumber: 24
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 728,
+                        columnNumber: 204
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/admin/plans/page.js",
+                lineNumber: 726,
+                columnNumber: 41
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 724,
+            columnNumber: 24
+        }, this);
+        $[96] = addNewWallet;
+        $[97] = addingNew;
+        $[98] = newWallet.address;
+        $[99] = newWallet.icon;
+        $[100] = newWallet.key;
+        $[101] = newWallet.network;
+        $[102] = newWallet.symbol;
+        $[103] = t52;
+    } else {
+        t52 = $[103];
+    }
+    let t53;
+    if ($[104] !== t13 || $[105] !== t44 || $[106] !== t50 || $[107] !== t51 || $[108] !== t52) {
+        t53 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "fade-up",
+            style: t9,
+            children: [
+                t13,
+                t44,
+                t50,
+                t51,
+                t52
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 794,
+            columnNumber: 11
+        }, this);
+        $[104] = t13;
+        $[105] = t44;
+        $[106] = t50;
+        $[107] = t51;
+        $[108] = t52;
+        $[109] = t53;
+    } else {
+        t53 = $[109];
+    }
+    return t53;
+}
+_s(CheckoutEditor, "LdezQXryVFweNpIJVnSN7VdSe2U=");
+_c = CheckoutEditor;
+// ── Main Page ──────────────────────────────────────────────────
+function _CheckoutEditorDivOnClick2(e_11) {
+    return e_11.stopPropagation();
+}
+function _CheckoutEditorDivOnClick(e_6) {
+    return e_6.stopPropagation();
+}
+function _CheckoutEditorAnonymous(h) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+        children: h
+    }, h, false, {
+        fileName: "[project]/app/admin/plans/page.js",
+        lineNumber: 815,
+        columnNumber: 10
+    }, this);
+}
+function AdminPlans() {
+    _s1();
+    const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(61);
+    if ($[0] !== "c8e6a64aec1ca921f1188ac5e574c180699b97620f80536dd785984099317b7a") {
+        for(let $i = 0; $i < 61; $i += 1){
+            $[$i] = Symbol.for("react.memo_cache_sentinel");
+        }
+        $[0] = "c8e6a64aec1ca921f1188ac5e574c180699b97620f80536dd785984099317b7a";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -1641,25 +3280,11 @@ function AdminPlans() {
     const [saved, setSaved] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [toast, setToast] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [tab, setTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("plans");
-    const [wallets, setWallets] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(DEFAULT_WALLETS);
-    const [editWallet, setEditWallet] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [checkout, setCheckout] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(DEFAULT_CHECKOUT);
+    const [coSaving, setCoSaving] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     let t1;
     if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-        t1 = {
-            key: "",
-            address: "",
-            network: "",
-            symbol: ""
-        };
-        $[2] = t1;
-    } else {
-        t1 = $[2];
-    }
-    const [walletForm, setWalletForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(t1);
-    const [walletSaving, setWalletSaving] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    let t2;
-    if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-        t2 = ({
+        t1 = ({
             "AdminPlans[showToast]": (msg)=>{
                 setToast(msg);
                 setTimeout({
@@ -1667,15 +3292,15 @@ function AdminPlans() {
                 }["AdminPlans[showToast > setTimeout()]"], 3000);
             }
         })["AdminPlans[showToast]"];
-        $[3] = t2;
+        $[2] = t1;
     } else {
-        t2 = $[3];
+        t1 = $[2];
     }
-    const showToast = t2;
+    const showToast = t1;
+    let t2;
     let t3;
-    let t4;
-    if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
-        t3 = ({
+    if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+        t2 = ({
             "AdminPlans[useEffect()]": ()=>{
                 fetch("/api/plans").then(_AdminPlansUseEffectAnonymous).then({
                     "AdminPlans[useEffect() > (anonymous)()]": (d)=>{
@@ -1685,81 +3310,111 @@ function AdminPlans() {
                 }["AdminPlans[useEffect() > (anonymous)()]"]).catch({
                     "AdminPlans[useEffect() > (anonymous)()]": ()=>setLoading(false)
                 }["AdminPlans[useEffect() > (anonymous)()]"]);
-                setWallets(loadWallets());
+                fetch("/api/settings").then(_AdminPlansUseEffectAnonymous2).then({
+                    "AdminPlans[useEffect() > (anonymous)()]": (d_0)=>{
+                        if (d_0.checkout) {
+                            setCheckout(d_0.checkout);
+                        }
+                    }
+                }["AdminPlans[useEffect() > (anonymous)()]"]).catch(_AdminPlansUseEffectAnonymous3);
             }
         })["AdminPlans[useEffect()]"];
-        t4 = [];
+        t3 = [];
+        $[3] = t2;
         $[4] = t3;
-        $[5] = t4;
     } else {
+        t2 = $[3];
         t3 = $[4];
-        t4 = $[5];
     }
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])(t3, t4);
-    let t5;
-    if ($[6] !== editing) {
-        t5 = ({
-            "AdminPlans[handleSave]": async (e)=>{
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])(t2, t3);
+    let t4;
+    if ($[5] !== editing) {
+        t4 = ({
+            "AdminPlans[handlePlanSave]": async (e)=>{
                 e.preventDefault();
-                try {
-                    const res = await fetch("/api/plans", {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(editing)
-                    });
-                    if (res.ok) {
-                        setPlans({
-                            "AdminPlans[handleSave > setPlans()]": (prev)=>prev.map({
-                                    "AdminPlans[handleSave > setPlans() > prev.map()]": (p)=>p.id === editing.id ? {
-                                            ...editing
-                                        } : p
-                                }["AdminPlans[handleSave > setPlans() > prev.map()]"])
-                        }["AdminPlans[handleSave > setPlans()]"]);
-                        setSaved(true);
-                        setTimeout({
-                            "AdminPlans[handleSave > setTimeout()]": ()=>{
-                                setEditing(null);
-                                setSaved(false);
-                            }
-                        }["AdminPlans[handleSave > setTimeout()]"], 1400);
-                    } else {
-                        showToast("\u274C Failed to save plan.");
-                    }
-                } catch  {
-                    showToast("\u274C Network error.");
+                const res = await fetch("/api/plans", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(editing)
+                });
+                if (res.ok) {
+                    setPlans({
+                        "AdminPlans[handlePlanSave > setPlans()]": (prev)=>prev.map({
+                                "AdminPlans[handlePlanSave > setPlans() > prev.map()]": (p)=>p.id === editing.id ? {
+                                        ...editing
+                                    } : p
+                            }["AdminPlans[handlePlanSave > setPlans() > prev.map()]"])
+                    }["AdminPlans[handlePlanSave > setPlans()]"]);
+                    setSaved(true);
+                    setTimeout({
+                        "AdminPlans[handlePlanSave > setTimeout()]": ()=>{
+                            setEditing(null);
+                            setSaved(false);
+                        }
+                    }["AdminPlans[handlePlanSave > setTimeout()]"], 1400);
+                } else {
+                    showToast("\u274C Failed to save plan.");
                 }
             }
-        })["AdminPlans[handleSave]"];
-        $[6] = editing;
-        $[7] = t5;
+        })["AdminPlans[handlePlanSave]"];
+        $[5] = editing;
+        $[6] = t4;
     } else {
-        t5 = $[7];
+        t4 = $[6];
     }
-    const handleSave = t5;
+    const handlePlanSave = t4;
+    let t5;
+    if ($[7] !== checkout) {
+        t5 = ({
+            "AdminPlans[handleCheckoutSave]": async ()=>{
+                setCoSaving(true);
+                const res_0 = await fetch("/api/settings", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        checkout
+                    })
+                });
+                if (res_0.ok) {
+                    showToast("\u2705 Checkout settings saved!");
+                } else {
+                    showToast("\u274C Failed to save settings.");
+                }
+                setCoSaving(false);
+            }
+        })["AdminPlans[handleCheckoutSave]"];
+        $[7] = checkout;
+        $[8] = t5;
+    } else {
+        t5 = $[8];
+    }
+    const handleCheckoutSave = t5;
     let t6;
-    if ($[8] !== editing) {
+    if ($[9] !== editing) {
         t6 = ({
             "AdminPlans[updateFeature]": (idx, val)=>{
-                const updated = [
+                const f = [
                     ...editing.features || []
                 ];
-                updated[idx] = val;
+                f[idx] = val;
                 setEditing({
                     ...editing,
-                    features: updated
+                    features: f
                 });
             }
         })["AdminPlans[updateFeature]"];
-        $[8] = editing;
-        $[9] = t6;
+        $[9] = editing;
+        $[10] = t6;
     } else {
-        t6 = $[9];
+        t6 = $[10];
     }
     const updateFeature = t6;
     let t7;
-    if ($[10] !== editing) {
+    if ($[11] !== editing) {
         t7 = ({
             "AdminPlans[addFeature]": ()=>setEditing({
                     ...editing,
@@ -1769,14 +3424,14 @@ function AdminPlans() {
                     ]
                 })
         })["AdminPlans[addFeature]"];
-        $[10] = editing;
-        $[11] = t7;
+        $[11] = editing;
+        $[12] = t7;
     } else {
-        t7 = $[11];
+        t7 = $[12];
     }
     const addFeature = t7;
     let t8;
-    if ($[12] !== editing) {
+    if ($[13] !== editing) {
         t8 = ({
             "AdminPlans[removeFeature]": (idx_0)=>setEditing({
                     ...editing,
@@ -1785,384 +3440,226 @@ function AdminPlans() {
                     }["AdminPlans[removeFeature > (anonymous)()]"])
                 })
         })["AdminPlans[removeFeature]"];
-        $[12] = editing;
-        $[13] = t8;
+        $[13] = editing;
+        $[14] = t8;
     } else {
-        t8 = $[13];
+        t8 = $[14];
     }
     const removeFeature = t8;
     let t9;
-    if ($[14] !== editing) {
+    if ($[15] !== editing) {
         t9 = ({
-            "AdminPlans[updateNotIncluded]": (idx_1, val_0)=>{
-                const updated_0 = [
+            "AdminPlans[updateNI]": (idx_1, val_0)=>{
+                const f_0 = [
                     ...editing.notIncluded || []
                 ];
-                updated_0[idx_1] = val_0;
+                f_0[idx_1] = val_0;
                 setEditing({
                     ...editing,
-                    notIncluded: updated_0
+                    notIncluded: f_0
                 });
             }
-        })["AdminPlans[updateNotIncluded]"];
-        $[14] = editing;
-        $[15] = t9;
+        })["AdminPlans[updateNI]"];
+        $[15] = editing;
+        $[16] = t9;
     } else {
-        t9 = $[15];
+        t9 = $[16];
     }
-    const updateNotIncluded = t9;
+    const updateNI = t9;
     let t10;
-    if ($[16] !== editing) {
+    if ($[17] !== editing) {
         t10 = ({
-            "AdminPlans[addNotIncluded]": ()=>setEditing({
+            "AdminPlans[addNI]": ()=>setEditing({
                     ...editing,
                     notIncluded: [
                         ...editing.notIncluded || [],
                         ""
                     ]
                 })
-        })["AdminPlans[addNotIncluded]"];
-        $[16] = editing;
-        $[17] = t10;
+        })["AdminPlans[addNI]"];
+        $[17] = editing;
+        $[18] = t10;
     } else {
-        t10 = $[17];
+        t10 = $[18];
     }
-    const addNotIncluded = t10;
+    const addNI = t10;
     let t11;
-    if ($[18] !== editing) {
+    if ($[19] !== editing) {
         t11 = ({
-            "AdminPlans[removeNotIncluded]": (idx_2)=>setEditing({
+            "AdminPlans[removeNI]": (idx_2)=>setEditing({
                     ...editing,
                     notIncluded: (editing.notIncluded || []).filter({
-                        "AdminPlans[removeNotIncluded > (anonymous)()]": (__0, i_0)=>i_0 !== idx_2
-                    }["AdminPlans[removeNotIncluded > (anonymous)()]"])
+                        "AdminPlans[removeNI > (anonymous)()]": (__0, i_0)=>i_0 !== idx_2
+                    }["AdminPlans[removeNI > (anonymous)()]"])
                 })
-        })["AdminPlans[removeNotIncluded]"];
-        $[18] = editing;
-        $[19] = t11;
+        })["AdminPlans[removeNI]"];
+        $[19] = editing;
+        $[20] = t11;
     } else {
-        t11 = $[19];
+        t11 = $[20];
     }
-    const removeNotIncluded = t11;
+    const removeNI = t11;
     let t12;
-    if ($[20] !== wallets) {
-        t12 = ({
-            "AdminPlans[openEditWallet]": (key)=>{
-                setEditWallet(key);
-                setWalletForm({
-                    key,
-                    ...wallets[key]
-                });
-            }
-        })["AdminPlans[openEditWallet]"];
-        $[20] = wallets;
-        $[21] = t12;
-    } else {
-        t12 = $[21];
-    }
-    const openEditWallet = t12;
     let t13;
-    if ($[22] !== editWallet || $[23] !== walletForm.address || $[24] !== walletForm.network || $[25] !== walletForm.symbol || $[26] !== wallets) {
-        t13 = ({
-            "AdminPlans[handleWalletSave]": (e_0)=>{
-                e_0.preventDefault();
-                setWalletSaving(true);
-                const updated_1 = {
-                    ...wallets,
-                    [editWallet]: {
-                        address: walletForm.address,
-                        network: walletForm.network,
-                        symbol: walletForm.symbol
-                    }
-                };
-                setWallets(updated_1);
-                saveWallets(updated_1);
-                setTimeout({
-                    "AdminPlans[handleWalletSave > setTimeout()]": ()=>{
-                        setWalletSaving(false);
-                        setEditWallet(null);
-                        showToast("\u2705 Wallet address updated!");
-                    }
-                }["AdminPlans[handleWalletSave > setTimeout()]"], 600);
-            }
-        })["AdminPlans[handleWalletSave]"];
-        $[22] = editWallet;
-        $[23] = walletForm.address;
-        $[24] = walletForm.network;
-        $[25] = walletForm.symbol;
-        $[26] = wallets;
-        $[27] = t13;
-    } else {
-        t13 = $[27];
-    }
-    const handleWalletSave = t13;
-    let t14;
-    let t15;
-    if ($[28] === Symbol.for("react.memo_cache_sentinel")) {
-        t14 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    if ($[21] === Symbol.for("react.memo_cache_sentinel")) {
+        t12 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "admin-topbar-title",
                     children: "Plans & Checkout"
                 }, void 0, false, {
                     fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 319,
+                    lineNumber: 1050,
                     columnNumber: 16
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "admin-topbar-sub",
-                    children: "Edit pricing, ROI, features and wallet addresses"
+                    children: "Edit pricing, ROI, features and checkout page settings"
                 }, void 0, false, {
                     fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 319,
+                    lineNumber: 1050,
                     columnNumber: 78
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 319,
+            lineNumber: 1050,
             columnNumber: 11
         }, this);
-        t15 = {
+        t13 = {
             display: "flex",
             gap: 8
         };
-        $[28] = t14;
-        $[29] = t15;
+        $[21] = t12;
+        $[22] = t13;
     } else {
-        t14 = $[28];
-        t15 = $[29];
+        t12 = $[21];
+        t13 = $[22];
     }
-    const t16 = `btn ${tab === "plans" ? "btn-primary" : "btn-ghost"}`;
-    let t17;
-    if ($[30] === Symbol.for("react.memo_cache_sentinel")) {
-        t17 = ({
+    const t14 = `btn ${tab === "plans" ? "btn-primary" : "btn-ghost"}`;
+    let t15;
+    if ($[23] === Symbol.for("react.memo_cache_sentinel")) {
+        t15 = ({
             "AdminPlans[<button>.onClick]": ()=>setTab("plans")
         })["AdminPlans[<button>.onClick]"];
-        $[30] = t17;
+        $[23] = t15;
     } else {
-        t17 = $[30];
+        t15 = $[23];
     }
-    let t18;
-    if ($[31] !== t16) {
-        t18 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-            className: t16,
-            onClick: t17,
+    let t16;
+    if ($[24] !== t14) {
+        t16 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+            className: t14,
+            onClick: t15,
             children: "📊 Plans"
         }, void 0, false, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 342,
+            lineNumber: 1073,
             columnNumber: 11
         }, this);
-        $[31] = t16;
-        $[32] = t18;
+        $[24] = t14;
+        $[25] = t16;
     } else {
-        t18 = $[32];
+        t16 = $[25];
     }
-    const t19 = `btn ${tab === "checkout" ? "btn-primary" : "btn-ghost"}`;
-    let t20;
-    if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-        t20 = ({
+    const t17 = `btn ${tab === "checkout" ? "btn-primary" : "btn-ghost"}`;
+    let t18;
+    if ($[26] === Symbol.for("react.memo_cache_sentinel")) {
+        t18 = ({
             "AdminPlans[<button>.onClick]": ()=>setTab("checkout")
         })["AdminPlans[<button>.onClick]"];
-        $[33] = t20;
+        $[26] = t18;
     } else {
-        t20 = $[33];
+        t18 = $[26];
     }
-    let t21;
-    if ($[34] !== t19) {
-        t21 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-            className: t19,
-            onClick: t20,
+    let t19;
+    if ($[27] !== t17) {
+        t19 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+            className: t17,
+            onClick: t18,
             children: "💳 Checkout Page"
         }, void 0, false, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 360,
+            lineNumber: 1091,
             columnNumber: 11
         }, this);
-        $[34] = t19;
-        $[35] = t21;
+        $[27] = t17;
+        $[28] = t19;
     } else {
-        t21 = $[35];
+        t19 = $[28];
     }
-    let t22;
-    if ($[36] !== t18 || $[37] !== t21) {
-        t22 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    let t20;
+    if ($[29] !== t16 || $[30] !== t19) {
+        t20 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "admin-topbar fade-in",
             children: [
-                t14,
+                t12,
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    style: t15,
+                    style: t13,
                     children: [
-                        t18,
-                        t21
+                        t16,
+                        t19
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 368,
+                    lineNumber: 1099,
                     columnNumber: 54
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 368,
+            lineNumber: 1099,
             columnNumber: 11
         }, this);
-        $[36] = t18;
-        $[37] = t21;
-        $[38] = t22;
+        $[29] = t16;
+        $[30] = t19;
+        $[31] = t20;
     } else {
-        t22 = $[38];
+        t20 = $[31];
     }
-    let t23;
-    if ($[39] !== loading || $[40] !== plans || $[41] !== tab) {
-        t23 = tab === "plans" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
-            children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    padding: 40,
-                    textAlign: "center",
-                    color: "var(--text-dim)"
-                },
-                children: "Loading plans…"
-            }, void 0, false, {
-                fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 377,
-                columnNumber: 43
-            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "plans-admin-grid fade-up",
-                children: plans.map({
-                    "AdminPlans[plans.map()]": (plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "admin-plan-card",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "admin-plan-card-head",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "admin-plan-card-name",
-                                            children: plan.name
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 382,
-                                            columnNumber: 131
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "admin-plan-card-roi",
-                                            style: {
-                                                color: PLAN_COLORS[plan.id] || plan.color
-                                            },
-                                            children: [
-                                                plan.roi,
-                                                "%"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 382,
-                                            columnNumber: 186
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                fontSize: 13,
-                                                color: "var(--text-dim)",
-                                                marginTop: 4
-                                            },
-                                            children: "Monthly ROI"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 384,
-                                            columnNumber: 35
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 382,
-                                    columnNumber: 93
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "admin-plan-card-body",
-                                    children: [
-                                        {
-                                            label: "Monthly Price",
-                                            value: `$${(plan.price || 0).toLocaleString()}`
-                                        },
-                                        {
-                                            label: "Min Deposit",
-                                            value: `$${(plan.minDeposit || 0).toLocaleString()}`
-                                        },
-                                        {
-                                            label: "Features",
-                                            value: `${(plan.features || []).length} included`
-                                        }
-                                    ].map(_AdminPlansPlansMapAnonymous)
-                                }, void 0, false, {
-                                    fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 388,
-                                    columnNumber: 41
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "admin-plan-card-foot",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        className: "btn btn-outline btn-sm",
-                                        style: {
-                                            flex: 1
-                                        },
-                                        onClick: {
-                                            "AdminPlans[plans.map() > <button>.onClick]": ()=>setEditing({
-                                                    ...plan
-                                                })
-                                        }["AdminPlans[plans.map() > <button>.onClick]"],
-                                        children: "✏ Edit Plan"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 397,
-                                        columnNumber: 96
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 397,
-                                    columnNumber: 58
-                                }, this)
-                            ]
-                        }, plan.id, true, {
-                            fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 382,
-                            columnNumber: 46
-                        }, this)
-                }["AdminPlans[plans.map()]"])
-            }, void 0, false, {
-                fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 381,
-                columnNumber: 33
-            }, this)
-        }, void 0, false);
-        $[39] = loading;
-        $[40] = plans;
-        $[41] = tab;
-        $[42] = t23;
-    } else {
-        t23 = $[42];
-    }
-    let t24;
-    if ($[43] !== openEditWallet || $[44] !== tab || $[45] !== wallets) {
-        t24 = tab === "checkout" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "fade-up",
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "users-table-card",
-                    style: {
-                        marginBottom: 24
-                    },
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "users-table-header",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    let t21;
+    if ($[32] !== loading || $[33] !== plans || $[34] !== tab) {
+        t21 = tab === "plans" && (loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            style: {
+                padding: 40,
+                textAlign: "center",
+                color: "var(--text-dim)"
+            },
+            children: "Loading…"
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 1108,
+            columnNumber: 41
+        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "plans-admin-grid fade-up",
+            children: plans.map({
+                "AdminPlans[plans.map()]": (plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "admin-plan-card",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "admin-plan-card-head",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "users-table-title",
-                                        children: "💳 Wallet Addresses"
+                                        className: "admin-plan-card-name",
+                                        children: plan.name
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 416,
-                                        columnNumber: 51
+                                        lineNumber: 1113,
+                                        columnNumber: 129
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "admin-plan-card-roi",
+                                        style: {
+                                            color: PLAN_COLORS[plan.id] || plan.color
+                                        },
+                                        children: [
+                                            plan.roi,
+                                            "%"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/admin/plans/page.js",
+                                        lineNumber: 1113,
+                                        columnNumber: 184
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
@@ -2170,177 +3667,106 @@ function AdminPlans() {
                                             color: "var(--text-dim)",
                                             marginTop: 4
                                         },
-                                        children: "These are the addresses users send payment to on the checkout page"
+                                        children: "Monthly ROI"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 416,
-                                        columnNumber: 111
+                                        lineNumber: 1115,
+                                        columnNumber: 33
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/plans/page.js",
-                                lineNumber: 416,
-                                columnNumber: 46
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 416,
-                            columnNumber: 10
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                            className: "table",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                        children: [
-                                            "Cryptocurrency",
-                                            "Network",
-                                            "Wallet Address",
-                                            "Actions"
-                                        ].map(_AdminPlansAnonymous)
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 420,
-                                        columnNumber: 132
-                                    }, this)
+                                lineNumber: 1113,
+                                columnNumber: 91
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "admin-plan-card-body",
+                                children: [
+                                    {
+                                        label: "Price",
+                                        value: `$${(plan.price || 0).toLocaleString()}/mo`
+                                    },
+                                    {
+                                        label: "Min Deposit",
+                                        value: `$${(plan.minDeposit || 0).toLocaleString()}`
+                                    },
+                                    {
+                                        label: "Features",
+                                        value: `${(plan.features || []).length} included`
+                                    }
+                                ].map(_AdminPlansPlansMapAnonymous)
+                            }, void 0, false, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 1119,
+                                columnNumber: 39
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "admin-plan-card-foot",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "btn btn-outline btn-sm",
+                                    style: {
+                                        flex: 1
+                                    },
+                                    onClick: {
+                                        "AdminPlans[plans.map() > <button>.onClick]": ()=>setEditing({
+                                                ...plan
+                                            })
+                                    }["AdminPlans[plans.map() > <button>.onClick]"],
+                                    children: "✏ Edit Plan"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 420,
-                                    columnNumber: 125
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                    children: Object.entries(wallets).map({
-                                        "AdminPlans[(anonymous)()]": (t25)=>{
-                                            const [key_0, w] = t25;
-                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        style: {
-                                                            fontWeight: 600
-                                                        },
-                                                        children: key_0
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/app/admin/plans/page.js",
-                                                        lineNumber: 423,
-                                                        columnNumber: 40
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        style: {
-                                                            color: "var(--text-dim)",
-                                                            fontSize: 13
-                                                        },
-                                                        children: w.network
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/app/admin/plans/page.js",
-                                                        lineNumber: 425,
-                                                        columnNumber: 34
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            style: {
-                                                                fontFamily: "var(--font-mono)",
-                                                                fontSize: 11,
-                                                                color: "var(--teal)",
-                                                                wordBreak: "break-all"
-                                                            },
-                                                            children: w.address
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 428,
-                                                            columnNumber: 42
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/app/admin/plans/page.js",
-                                                        lineNumber: 428,
-                                                        columnNumber: 38
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            className: "icon-btn",
-                                                            title: "Edit",
-                                                            onClick: {
-                                                                "AdminPlans[(anonymous)() > <button>.onClick]": ()=>openEditWallet(key_0)
-                                                            }["AdminPlans[(anonymous)() > <button>.onClick]"],
-                                                            children: "✏️"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 433,
-                                                            columnNumber: 51
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/app/admin/plans/page.js",
-                                                        lineNumber: 433,
-                                                        columnNumber: 47
-                                                    }, this)
-                                                ]
-                                            }, key_0, true, {
-                                                fileName: "[project]/app/admin/plans/page.js",
-                                                lineNumber: 423,
-                                                columnNumber: 24
-                                            }, this);
-                                        }
-                                    }["AdminPlans[(anonymous)()]"])
-                                }, void 0, false, {
-                                    fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 420,
-                                    columnNumber: 235
+                                    lineNumber: 1128,
+                                    columnNumber: 94
                                 }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 420,
-                            columnNumber: 100
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 414,
-                    columnNumber: 58
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    style: {
-                        background: "rgba(255,183,0,0.08)",
-                        border: "1px solid rgba(255,183,0,0.2)",
-                        borderRadius: "var(--radius)",
-                        padding: 16,
-                        fontSize: 13,
-                        color: "var(--text-dim)"
-                    },
-                    children: [
-                        "⚠️ ",
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                            style: {
-                                color: "var(--gold)"
-                            },
-                            children: "Important:"
-                        }, void 0, false, {
-                            fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 444,
-                            columnNumber: 13
-                        }, this),
-                        " Wallet address changes take effect immediately on the checkout page for all users. Double-check addresses before saving to avoid losing payments."
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 437,
-                    columnNumber: 67
-                }, this)
-            ]
-        }, void 0, true, {
+                            }, void 0, false, {
+                                fileName: "[project]/app/admin/plans/page.js",
+                                lineNumber: 1128,
+                                columnNumber: 56
+                            }, this)
+                        ]
+                    }, plan.id, true, {
+                        fileName: "[project]/app/admin/plans/page.js",
+                        lineNumber: 1113,
+                        columnNumber: 44
+                    }, this)
+            }["AdminPlans[plans.map()]"])
+        }, void 0, false, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 414,
+            lineNumber: 1112,
+            columnNumber: 25
+        }, this));
+        $[32] = loading;
+        $[33] = plans;
+        $[34] = tab;
+        $[35] = t21;
+    } else {
+        t21 = $[35];
+    }
+    let t22;
+    if ($[36] !== checkout || $[37] !== coSaving || $[38] !== handleCheckoutSave || $[39] !== tab || $[40] !== toast) {
+        t22 = tab === "checkout" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(CheckoutEditor, {
+            checkout: checkout,
+            setCheckout: setCheckout,
+            onSave: handleCheckoutSave,
+            saving: coSaving,
+            toast: toast
+        }, void 0, false, {
+            fileName: "[project]/app/admin/plans/page.js",
+            lineNumber: 1145,
             columnNumber: 33
         }, this);
-        $[43] = openEditWallet;
-        $[44] = tab;
-        $[45] = wallets;
-        $[46] = t24;
+        $[36] = checkout;
+        $[37] = coSaving;
+        $[38] = handleCheckoutSave;
+        $[39] = tab;
+        $[40] = toast;
+        $[41] = t22;
     } else {
-        t24 = $[46];
+        t22 = $[41];
     }
-    let t25;
-    if ($[47] !== addFeature || $[48] !== addNotIncluded || $[49] !== editing || $[50] !== handleSave || $[51] !== removeFeature || $[52] !== removeNotIncluded || $[53] !== saved || $[54] !== updateFeature || $[55] !== updateNotIncluded) {
-        t25 = editing && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    let t23;
+    if ($[42] !== addFeature || $[43] !== addNI || $[44] !== editing || $[45] !== handlePlanSave || $[46] !== removeFeature || $[47] !== removeNI || $[48] !== saved || $[49] !== updateFeature || $[50] !== updateNI) {
+        t23 = editing && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "modal-overlay",
             onClick: {
                 "AdminPlans[<div>.onClick]": ()=>setEditing(null)
@@ -2348,7 +3774,7 @@ function AdminPlans() {
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "plan-edit-modal",
                 style: {
-                    maxWidth: 540,
+                    maxWidth: 560,
                     maxHeight: "90vh",
                     overflowY: "auto"
                 },
@@ -2367,7 +3793,7 @@ function AdminPlans() {
                             children: "✅"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 465,
+                            lineNumber: 1166,
                             columnNumber: 12
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2378,7 +3804,7 @@ function AdminPlans() {
                             children: "Plan Updated!"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 468,
+                            lineNumber: 1169,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2389,13 +3815,13 @@ function AdminPlans() {
                             children: "Changes are now live for all users."
                         }, void 0, false, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 471,
+                            lineNumber: 1172,
                             columnNumber: 33
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/plans/page.js",
-                    lineNumber: 462,
+                    lineNumber: 1163,
                     columnNumber: 51
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                     children: [
@@ -2411,7 +3837,7 @@ function AdminPlans() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 474,
+                            lineNumber: 1175,
                             columnNumber: 66
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2419,12 +3845,12 @@ function AdminPlans() {
                             children: "Changes apply immediately to the plans page and checkout."
                         }, void 0, false, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 476,
+                            lineNumber: 1177,
                             columnNumber: 44
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
                             className: "plan-edit-form",
-                            onSubmit: handleSave,
+                            onSubmit: handlePlanSave,
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "plan-edit-row",
@@ -2437,29 +3863,29 @@ function AdminPlans() {
                                                     children: "Plan Name"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 476,
-                                                    columnNumber: 252
+                                                    lineNumber: 1177,
+                                                    columnNumber: 256
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                     className: "input",
                                                     value: editing.name,
                                                     onChange: {
-                                                        "AdminPlans[<input>.onChange]": (e_2)=>setEditing({
+                                                        "AdminPlans[<input>.onChange]": (e_1)=>setEditing({
                                                                 ...editing,
-                                                                name: e_2.target.value
+                                                                name: e_1.target.value
                                                             })
                                                     }["AdminPlans[<input>.onChange]"],
                                                     required: true
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 476,
-                                                    columnNumber: 300
+                                                    lineNumber: 1177,
+                                                    columnNumber: 304
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 476,
-                                            columnNumber: 224
+                                            lineNumber: 1177,
+                                            columnNumber: 228
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "form-group",
@@ -2469,7 +3895,7 @@ function AdminPlans() {
                                                     children: "Badge Label"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 481,
+                                                    lineNumber: 1182,
                                                     columnNumber: 104
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2477,27 +3903,27 @@ function AdminPlans() {
                                                     placeholder: "e.g. Most Popular",
                                                     value: editing.badge || "",
                                                     onChange: {
-                                                        "AdminPlans[<input>.onChange]": (e_3)=>setEditing({
+                                                        "AdminPlans[<input>.onChange]": (e_2)=>setEditing({
                                                                 ...editing,
-                                                                badge: e_3.target.value
+                                                                badge: e_2.target.value
                                                             })
                                                     }["AdminPlans[<input>.onChange]"]
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 481,
+                                                    lineNumber: 1182,
                                                     columnNumber: 154
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 481,
+                                            lineNumber: 1182,
                                             columnNumber: 76
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 476,
-                                    columnNumber: 193
+                                    lineNumber: 1177,
+                                    columnNumber: 197
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "plan-edit-row",
@@ -2510,7 +3936,7 @@ function AdminPlans() {
                                                     children: "Monthly ROI (%)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 486,
+                                                    lineNumber: 1187,
                                                     columnNumber: 125
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2520,21 +3946,21 @@ function AdminPlans() {
                                                     max: "100",
                                                     value: editing.roi,
                                                     onChange: {
-                                                        "AdminPlans[<input>.onChange]": (e_4)=>setEditing({
+                                                        "AdminPlans[<input>.onChange]": (e_3)=>setEditing({
                                                                 ...editing,
-                                                                roi: Number(e_4.target.value)
+                                                                roi: Number(e_3.target.value)
                                                             })
                                                     }["AdminPlans[<input>.onChange]"],
                                                     required: true
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 486,
+                                                    lineNumber: 1187,
                                                     columnNumber: 179
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 486,
+                                            lineNumber: 1187,
                                             columnNumber: 97
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2545,7 +3971,7 @@ function AdminPlans() {
                                                     children: "Monthly Price ($)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 491,
+                                                    lineNumber: 1192,
                                                     columnNumber: 104
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2554,27 +3980,27 @@ function AdminPlans() {
                                                     min: "1",
                                                     value: editing.price,
                                                     onChange: {
-                                                        "AdminPlans[<input>.onChange]": (e_5)=>setEditing({
+                                                        "AdminPlans[<input>.onChange]": (e_4)=>setEditing({
                                                                 ...editing,
-                                                                price: Number(e_5.target.value)
+                                                                price: Number(e_4.target.value)
                                                             })
                                                     }["AdminPlans[<input>.onChange]"],
                                                     required: true
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 491,
+                                                    lineNumber: 1192,
                                                     columnNumber: 160
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 491,
+                                            lineNumber: 1192,
                                             columnNumber: 76
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 486,
+                                    lineNumber: 1187,
                                     columnNumber: 66
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2588,7 +4014,7 @@ function AdminPlans() {
                                                     children: "Min Deposit ($)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 496,
+                                                    lineNumber: 1197,
                                                     columnNumber: 141
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2597,21 +4023,20 @@ function AdminPlans() {
                                                     min: "1",
                                                     value: editing.minDeposit || 0,
                                                     onChange: {
-                                                        "AdminPlans[<input>.onChange]": (e_6)=>setEditing({
+                                                        "AdminPlans[<input>.onChange]": (e_5)=>setEditing({
                                                                 ...editing,
-                                                                minDeposit: Number(e_6.target.value)
+                                                                minDeposit: Number(e_5.target.value)
                                                             })
-                                                    }["AdminPlans[<input>.onChange]"],
-                                                    required: true
+                                                    }["AdminPlans[<input>.onChange]"]
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 496,
+                                                    lineNumber: 1197,
                                                     columnNumber: 195
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 496,
+                                            lineNumber: 1197,
                                             columnNumber: 113
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2619,11 +4044,11 @@ function AdminPlans() {
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                     className: "input-label",
-                                                    children: "Color (hex)"
+                                                    children: "Color"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 501,
-                                                    columnNumber: 104
+                                                    lineNumber: 1202,
+                                                    columnNumber: 88
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
@@ -2634,26 +4059,25 @@ function AdminPlans() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             className: "input",
-                                                            placeholder: "#00D4AA",
                                                             value: editing.color || "",
                                                             onChange: {
-                                                                "AdminPlans[<input>.onChange]": (e_7)=>setEditing({
+                                                                "AdminPlans[<input>.onChange]": (e_6)=>setEditing({
                                                                         ...editing,
-                                                                        color: e_7.target.value
+                                                                        color: e_6.target.value
                                                                     })
                                                             }["AdminPlans[<input>.onChange]"]
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 505,
+                                                            lineNumber: 1206,
                                                             columnNumber: 20
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             type: "color",
                                                             value: editing.color || "#00D4AA",
                                                             onChange: {
-                                                                "AdminPlans[<input>.onChange]": (e_8)=>setEditing({
+                                                                "AdminPlans[<input>.onChange]": (e_7)=>setEditing({
                                                                         ...editing,
-                                                                        color: e_8.target.value
+                                                                        color: e_7.target.value
                                                                     })
                                                             }["AdminPlans[<input>.onChange]"],
                                                             style: {
@@ -2661,30 +4085,29 @@ function AdminPlans() {
                                                                 height: 40,
                                                                 border: "none",
                                                                 borderRadius: 8,
-                                                                cursor: "pointer",
-                                                                background: "none"
+                                                                cursor: "pointer"
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 510,
+                                                            lineNumber: 1211,
                                                             columnNumber: 56
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 501,
-                                                    columnNumber: 154
+                                                    lineNumber: 1202,
+                                                    columnNumber: 132
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 501,
-                                            columnNumber: 76
+                                            lineNumber: 1202,
+                                            columnNumber: 60
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 496,
+                                    lineNumber: 1197,
                                     columnNumber: 82
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2695,11 +4118,11 @@ function AdminPlans() {
                                             children: "✅ Included Features"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 522,
+                                            lineNumber: 1222,
                                             columnNumber: 70
                                         }, this),
                                         (editing.features || []).map({
-                                            "AdminPlans[(anonymous)()]": (f, i_2)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            "AdminPlans[(anonymous)()]": (f_1, i_2)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
                                                         display: "flex",
                                                         gap: 8,
@@ -2708,14 +4131,14 @@ function AdminPlans() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             className: "input",
-                                                            value: f,
+                                                            value: f_1,
                                                             onChange: {
-                                                                "AdminPlans[(anonymous)() > <input>.onChange]": (e_9)=>updateFeature(i_2, e_9.target.value)
+                                                                "AdminPlans[(anonymous)() > <input>.onChange]": (e_8)=>updateFeature(i_2, e_8.target.value)
                                                             }["AdminPlans[(anonymous)() > <input>.onChange]"],
                                                             placeholder: "Feature description"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 527,
+                                                            lineNumber: 1227,
                                                             columnNumber: 20
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2734,14 +4157,14 @@ function AdminPlans() {
                                                             children: "✕"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 529,
+                                                            lineNumber: 1229,
                                                             columnNumber: 106
                                                         }, this)
                                                     ]
                                                 }, i_2, true, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 523,
-                                                    columnNumber: 58
+                                                    lineNumber: 1223,
+                                                    columnNumber: 60
                                                 }, this)
                                         }["AdminPlans[(anonymous)()]"]),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2751,13 +4174,13 @@ function AdminPlans() {
                                             children: "+ Add Feature"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 539,
+                                            lineNumber: 1239,
                                             columnNumber: 47
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 522,
+                                    lineNumber: 1222,
                                     columnNumber: 42
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2768,11 +4191,11 @@ function AdminPlans() {
                                             children: "✗ Not Included"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 539,
+                                            lineNumber: 1239,
                                             columnNumber: 179
                                         }, this),
                                         (editing.notIncluded || []).map({
-                                            "AdminPlans[(anonymous)()]": (f_0, i_3)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            "AdminPlans[(anonymous)()]": (f_2, i_3)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
                                                         display: "flex",
                                                         gap: 8,
@@ -2781,20 +4204,20 @@ function AdminPlans() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             className: "input",
-                                                            value: f_0,
+                                                            value: f_2,
                                                             onChange: {
-                                                                "AdminPlans[(anonymous)() > <input>.onChange]": (e_10)=>updateNotIncluded(i_3, e_10.target.value)
+                                                                "AdminPlans[(anonymous)() > <input>.onChange]": (e_9)=>updateNI(i_3, e_9.target.value)
                                                             }["AdminPlans[(anonymous)() > <input>.onChange]"],
                                                             placeholder: "Not included item"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 544,
+                                                            lineNumber: 1244,
                                                             columnNumber: 20
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                             type: "button",
                                                             onClick: {
-                                                                "AdminPlans[(anonymous)() > <button>.onClick]": ()=>removeNotIncluded(i_3)
+                                                                "AdminPlans[(anonymous)() > <button>.onClick]": ()=>removeNI(i_3)
                                                             }["AdminPlans[(anonymous)() > <button>.onClick]"],
                                                             style: {
                                                                 background: "var(--red)",
@@ -2807,30 +4230,30 @@ function AdminPlans() {
                                                             children: "✕"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/plans/page.js",
-                                                            lineNumber: 546,
+                                                            lineNumber: 1246,
                                                             columnNumber: 104
                                                         }, this)
                                                     ]
                                                 }, i_3, true, {
                                                     fileName: "[project]/app/admin/plans/page.js",
-                                                    lineNumber: 540,
+                                                    lineNumber: 1240,
                                                     columnNumber: 60
                                                 }, this)
                                         }["AdminPlans[(anonymous)()]"]),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             type: "button",
                                             className: "btn btn-ghost btn-sm",
-                                            onClick: addNotIncluded,
+                                            onClick: addNI,
                                             children: "+ Add Item"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 556,
+                                            lineNumber: 1256,
                                             columnNumber: 47
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 539,
+                                    lineNumber: 1239,
                                     columnNumber: 151
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2852,7 +4275,7 @@ function AdminPlans() {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 560,
+                                            lineNumber: 1260,
                                             columnNumber: 16
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2864,344 +4287,130 @@ function AdminPlans() {
                                             children: "💾 Save Changes"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/plans/page.js",
-                                            lineNumber: 564,
+                                            lineNumber: 1264,
                                             columnNumber: 65
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/plans/page.js",
-                                    lineNumber: 556,
-                                    columnNumber: 152
+                                    lineNumber: 1256,
+                                    columnNumber: 143
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/plans/page.js",
-                            lineNumber: 476,
+                            lineNumber: 1177,
                             columnNumber: 138
                         }, this)
                     ]
                 }, void 0, true)
             }, void 0, false, {
                 fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 458,
+                lineNumber: 1159,
                 columnNumber: 37
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 456,
+            lineNumber: 1157,
             columnNumber: 22
         }, this);
-        $[47] = addFeature;
-        $[48] = addNotIncluded;
-        $[49] = editing;
-        $[50] = handleSave;
-        $[51] = removeFeature;
-        $[52] = removeNotIncluded;
-        $[53] = saved;
-        $[54] = updateFeature;
-        $[55] = updateNotIncluded;
-        $[56] = t25;
+        $[42] = addFeature;
+        $[43] = addNI;
+        $[44] = editing;
+        $[45] = handlePlanSave;
+        $[46] = removeFeature;
+        $[47] = removeNI;
+        $[48] = saved;
+        $[49] = updateFeature;
+        $[50] = updateNI;
+        $[51] = t23;
     } else {
-        t25 = $[56];
+        t23 = $[51];
     }
-    let t26;
-    if ($[57] !== editWallet || $[58] !== handleWalletSave || $[59] !== walletForm.address || $[60] !== walletForm.key || $[61] !== walletForm.network || $[62] !== walletSaving) {
-        t26 = editWallet && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "modal-overlay",
-            onClick: {
-                "AdminPlans[<div>.onClick]": ()=>setEditWallet(null)
-            }["AdminPlans[<div>.onClick]"],
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "plan-edit-modal",
-                style: {
-                    maxWidth: 480
-                },
-                onClick: _AdminPlansDivOnClick2,
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "plan-edit-title",
-                        children: "✏️ Edit Wallet Address"
-                    }, void 0, false, {
-                        fileName: "[project]/app/admin/plans/page.js",
-                        lineNumber: 586,
-                        columnNumber: 43
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "plan-edit-sub",
-                        style: {
-                            color: "var(--gold)"
-                        },
-                        children: "⚠️ Make sure the address is correct before saving."
-                    }, void 0, false, {
-                        fileName: "[project]/app/admin/plans/page.js",
-                        lineNumber: 586,
-                        columnNumber: 104
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                        className: "plan-edit-form",
-                        onSubmit: handleWalletSave,
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "form-group",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        className: "input-label",
-                                        children: "Cryptocurrency"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 588,
-                                        columnNumber: 157
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        className: "input",
-                                        value: walletForm.key,
-                                        disabled: true,
-                                        style: {
-                                            opacity: 0.6
-                                        }
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 588,
-                                        columnNumber: 210
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/admin/plans/page.js",
-                                lineNumber: 588,
-                                columnNumber: 129
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "form-group",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        className: "input-label",
-                                        children: "Network Label"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 590,
-                                        columnNumber: 52
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        className: "input",
-                                        value: walletForm.network,
-                                        onChange: {
-                                            "AdminPlans[<input>.onChange]": (e_12)=>setWalletForm({
-                                                    "AdminPlans[<input>.onChange > setWalletForm()]": (f_1)=>({
-                                                            ...f_1,
-                                                            network: e_12.target.value
-                                                        })
-                                                }["AdminPlans[<input>.onChange > setWalletForm()]"])
-                                        }["AdminPlans[<input>.onChange]"],
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 590,
-                                        columnNumber: 104
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/admin/plans/page.js",
-                                lineNumber: 590,
-                                columnNumber: 24
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "form-group",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        className: "input-label",
-                                        children: "Wallet Address"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 597,
-                                        columnNumber: 100
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        className: "input",
-                                        value: walletForm.address,
-                                        onChange: {
-                                            "AdminPlans[<input>.onChange]": (e_13)=>setWalletForm({
-                                                    "AdminPlans[<input>.onChange > setWalletForm()]": (f_2)=>({
-                                                            ...f_2,
-                                                            address: e_13.target.value
-                                                        })
-                                                }["AdminPlans[<input>.onChange > setWalletForm()]"])
-                                        }["AdminPlans[<input>.onChange]"],
-                                        required: true,
-                                        style: {
-                                            fontFamily: "var(--font-mono)",
-                                            fontSize: 12
-                                        }
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 597,
-                                        columnNumber: 153
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/admin/plans/page.js",
-                                lineNumber: 597,
-                                columnNumber: 72
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                style: {
-                                    display: "flex",
-                                    gap: 12,
-                                    marginTop: 8
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        type: "button",
-                                        className: "btn btn-ghost",
-                                        style: {
-                                            flex: 1
-                                        },
-                                        onClick: {
-                                            "AdminPlans[<button>.onClick]": ()=>setEditWallet(null)
-                                        }["AdminPlans[<button>.onClick]"],
-                                        children: "Cancel"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 611,
-                                        columnNumber: 14
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        type: "submit",
-                                        className: "btn btn-primary",
-                                        style: {
-                                            flex: 2
-                                        },
-                                        disabled: walletSaving,
-                                        children: walletSaving ? "Saving\u2026" : "\uD83D\uDCBE Save Address"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/admin/plans/page.js",
-                                        lineNumber: 615,
-                                        columnNumber: 63
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/admin/plans/page.js",
-                                lineNumber: 607,
-                                columnNumber: 24
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/app/admin/plans/page.js",
-                        lineNumber: 588,
-                        columnNumber: 68
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 584,
-                columnNumber: 37
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 582,
-            columnNumber: 25
-        }, this);
-        $[57] = editWallet;
-        $[58] = handleWalletSave;
-        $[59] = walletForm.address;
-        $[60] = walletForm.key;
-        $[61] = walletForm.network;
-        $[62] = walletSaving;
-        $[63] = t26;
-    } else {
-        t26 = $[63];
-    }
-    let t27;
-    if ($[64] !== toast) {
-        t27 = toast && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+    let t24;
+    if ($[52] !== tab || $[53] !== toast) {
+        t24 = toast && tab === "plans" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "admin-toast",
             children: toast
         }, void 0, false, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 630,
-            columnNumber: 20
+            lineNumber: 1282,
+            columnNumber: 39
         }, this);
-        $[64] = toast;
-        $[65] = t27;
+        $[52] = tab;
+        $[53] = toast;
+        $[54] = t24;
     } else {
-        t27 = $[65];
+        t24 = $[54];
     }
-    let t28;
-    if ($[66] !== t22 || $[67] !== t23 || $[68] !== t24 || $[69] !== t25 || $[70] !== t26 || $[71] !== t27) {
-        t28 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$admin$2f$page$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AdminLayout"], {
+    let t25;
+    if ($[55] !== t20 || $[56] !== t21 || $[57] !== t22 || $[58] !== t23 || $[59] !== t24) {
+        t25 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$admin$2f$page$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AdminLayout"], {
             children: [
+                t20,
+                t21,
                 t22,
                 t23,
-                t24,
-                t25,
-                t26,
-                t27
+                t24
             ]
         }, void 0, true, {
             fileName: "[project]/app/admin/plans/page.js",
-            lineNumber: 638,
+            lineNumber: 1291,
             columnNumber: 11
         }, this);
-        $[66] = t22;
-        $[67] = t23;
-        $[68] = t24;
-        $[69] = t25;
-        $[70] = t26;
-        $[71] = t27;
-        $[72] = t28;
+        $[55] = t20;
+        $[56] = t21;
+        $[57] = t22;
+        $[58] = t23;
+        $[59] = t24;
+        $[60] = t25;
     } else {
-        t28 = $[72];
+        t25 = $[60];
     }
-    return t28;
+    return t25;
 }
-_s(AdminPlans, "melxFPxiI+cLDkQskDMktgoFdpE=");
-_c = AdminPlans;
-function _AdminPlansDivOnClick2(e_11) {
-    return e_11.stopPropagation();
+_s1(AdminPlans, "Zuro1aiIV8lLzSPkD+0kcdaAgnI=");
+_c1 = AdminPlans;
+function _AdminPlansDivOnClick(e_0) {
+    return e_0.stopPropagation();
 }
-function _AdminPlansDivOnClick(e_1) {
-    return e_1.stopPropagation();
-}
-function _AdminPlansAnonymous(h) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-        children: h
-    }, h, false, {
-        fileName: "[project]/app/admin/plans/page.js",
-        lineNumber: 658,
-        columnNumber: 10
-    }, this);
-}
-function _AdminPlansPlansMapAnonymous(row, i_1) {
+function _AdminPlansPlansMapAnonymous(r_1, i_1) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "admin-plan-stat-row",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                 className: "admin-plan-stat-label",
-                children: row.label
+                children: r_1.label
             }, void 0, false, {
                 fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 661,
+                lineNumber: 1307,
                 columnNumber: 57
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                 className: "admin-plan-stat-value",
-                children: row.value
+                children: r_1.value
             }, void 0, false, {
                 fileName: "[project]/app/admin/plans/page.js",
-                lineNumber: 661,
+                lineNumber: 1307,
                 columnNumber: 115
             }, this)
         ]
     }, i_1, true, {
         fileName: "[project]/app/admin/plans/page.js",
-        lineNumber: 661,
+        lineNumber: 1307,
         columnNumber: 10
     }, this);
+}
+function _AdminPlansUseEffectAnonymous3() {}
+function _AdminPlansUseEffectAnonymous2(r_0) {
+    return r_0.json();
 }
 function _AdminPlansUseEffectAnonymous(r) {
     return r.json();
 }
-var _c;
-__turbopack_context__.k.register(_c, "AdminPlans");
+var _c, _c1;
+__turbopack_context__.k.register(_c, "CheckoutEditor");
+__turbopack_context__.k.register(_c1, "AdminPlans");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

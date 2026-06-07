@@ -1,0 +1,129 @@
+[
+  {
+    "id": "starter",
+    "name": "Starter",
+    "price": 250,
+    "roi": 5,
+    "duration": "monthly",
+    "minDeposit": 250,
+    "maxDeposit": 999,
+    "color": "#4A9EFF",
+    "badge": null,
+    "features": [
+      "5% Monthly ROI",
+      "Basic market signals",
+      "Email support",
+      "Weekly performance report",
+      "Access to 3 coin pairs",
+      "Manual withdrawal"
+    ],
+    "notIncluded": [
+      "AI-powered analysis",
+      "Dedicated account manager",
+      "Priority withdrawal",
+      "Custom strategy"
+    ]
+  },
+  {
+    "id": "growth",
+    "name": "Growth",
+    "price": 1000,
+    "roi": 8,
+    "duration": "monthly",
+    "minDeposit": 1000,
+    "maxDeposit": 4999,
+    "color": "#00D4AA",
+    "badge": null,
+    "features": [
+      "8% Monthly ROI",
+      "Advanced trading signals",
+      "Priority email & chat support",
+      "Daily performance report",
+      "Access to 10 coin pairs",
+      "Automated reinvestment",
+      "Portfolio tracker"
+    ],
+    "notIncluded": [
+      "AI-powered analysis",
+      "Dedicated account manager",
+      "Custom strategy"
+    ]
+  },
+  {
+    "id": "pro",
+    "name": "Pro Trader",
+    "price": 5000,
+    "roi": 12,
+    "duration": "monthly",
+    "minDeposit": 5000,
+    "maxDeposit": 14999,
+    "color": "#7B61FF",
+    "badge": "Most Popular",
+    "features": [
+      "12% Monthly ROI",
+      "Premium trading signals",
+      "24/7 live support",
+      "Real-time performance dashboard",
+      "Access to all coin pairs",
+      "Automated reinvestment",
+      "AI-powered market analysis",
+      "Priority withdrawal (24h)",
+      "Risk management tools"
+    ],
+    "notIncluded": [
+      "Dedicated account manager",
+      "Custom strategy"
+    ]
+  },
+  {
+    "id": "elite",
+    "name": "Elite",
+    "price": 15000,
+    "roi": 18,
+    "duration": "monthly",
+    "minDeposit": 15000,
+    "maxDeposit": 49999,
+    "color": "#FFB800",
+    "badge": "Best Value",
+    "features": [
+      "18% Monthly ROI",
+      "Exclusive VIP signals",
+      "Dedicated account manager",
+      "Real-time dashboard & alerts",
+      "All coin pairs + futures",
+      "Automated compound interest",
+      "Advanced AI analysis suite",
+      "Priority withdrawal (12h)",
+      "Hedging & risk management",
+      "Monthly strategy review"
+    ],
+    "notIncluded": [
+      "Custom trading strategy"
+    ]
+  },
+  {
+    "id": "titan",
+    "name": "Titan",
+    "price": 50000,
+    "roi": 25,
+    "duration": "monthly",
+    "minDeposit": 50000,
+    "maxDeposit": null,
+    "color": "#FF6B35",
+    "badge": "Exclusive",
+    "features": [
+      "25% Monthly ROI",
+      "Institutional-grade signals",
+      "Personal senior broker",
+      "White-glove 24/7 support",
+      "All assets + derivatives",
+      "Full compound automation",
+      "Custom AI trading strategy",
+      "Instant withdrawal",
+      "Quarterly portfolio audit",
+      "OTC trading access",
+      "Tax optimization guidance"
+    ],
+    "notIncluded": []
+  }
+]

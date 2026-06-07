@@ -47,6 +47,8 @@ module.exports = mod;
 __turbopack_context__.s([
     "plansDb",
     ()=>plansDb,
+    "settingsDb",
+    ()=>settingsDb,
     "subscriptionsDb",
     ()=>subscriptionsDb,
     "transactionsDb",
@@ -315,6 +317,38 @@ const plansDb = {
         return Plan.findOneAndUpdate({
             id
         }, updates, {
+            new: true
+        }).lean();
+    }
+};
+// ── SettingsSchema ───────────────────────────────────────────
+const SettingsSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema({
+    key: {
+        type: String,
+        unique: true
+    },
+    value: __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].Schema.Types.Mixed
+}, {
+    collection: "settings"
+});
+const Settings = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].models.Settings || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$2c$__$5b$project$5d2f$node_modules$2f$mongoose$29$__["default"].model("Settings", SettingsSchema);
+const settingsDb = {
+    async get (key) {
+        await connectDB();
+        const doc = await Settings.findOne({
+            key
+        }).lean();
+        return doc ? doc.value : null;
+    },
+    async set (key, value) {
+        await connectDB();
+        return Settings.findOneAndUpdate({
+            key
+        }, {
+            key,
+            value
+        }, {
+            upsert: true,
             new: true
         }).lean();
     }
